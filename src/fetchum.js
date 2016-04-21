@@ -180,6 +180,8 @@ function _requestWithToken(options, params, body, customToken, headers, credenti
 export const generateRequest = (options) => {
   options.form = options.form || false;
   options.external = options.external || false;
+  if (options.external) { return _publicRequest.bind(this, options); }
+
   return options.token ? (
     _requestWithToken.bind(this, options)
   ) : (
