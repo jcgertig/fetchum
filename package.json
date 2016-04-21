@@ -1,0 +1,21 @@
+{
+  "name": "fetchum",
+  "version": "0.0.1",
+  "description": "A better fetch and local storage system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fetch",
+    "api",
+    "es6",
+    "promise"
+  ],
+  "author": "Jonathan Gertig <jcgertig@gmail.com>",
+  "license": "ISC",
+  "peerDependencies": {
+    "es6-promise": "^3.1.2",
+    "isomorphic-fetch": "^2.2.1"
+  }
+}
