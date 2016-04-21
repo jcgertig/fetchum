@@ -46,6 +46,34 @@ const getRandomUser = generateRequest({
 ```
 
 ```
+import {generateRequest} from 'fetchum';
+
+const postUser = generateRequest({
+  method: 'POST',
+  token: true,
+  route: '/v1/user',
+});
+
+const putUser = generateRequest({
+  method: 'PUT',
+  token: true,
+  route: '/v1/user/:id',
+});
+
+const createUser = (data) => {
+  postUser({}, data)
+    .then((res) => { console.log('created', res); })
+    .catch((res) => { console.warn(res); });
+};
+
+const updateUser = (id, data) => {
+  putUser({id}, data)
+    .then((res) => { console.log('updated', res); })
+    .catch((res) => { console.warn(res); });
+};
+```
+
+```
 import {localStorage} from 'fetchum';
 
 const setToken = (token) => {
