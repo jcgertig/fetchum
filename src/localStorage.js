@@ -51,7 +51,7 @@ export const remove = (id) => {
  *
  */
 export const getHydratedState = () => {
-  let state = get('state');
+  const state = get('state');
   return state || {};
 };
 

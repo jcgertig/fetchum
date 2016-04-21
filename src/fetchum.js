@@ -33,21 +33,21 @@ function _getBase() {
  *
  */
 function _transformFormBody(body, formData, originalKey) {
-  let keys = Object.keys(body);
-  forEach(Object.keys(body), (paramkey) => {
-    let obj = body[key];
-    let key = typeof originalKey !== 'undefined' ? `${originalKey}[${paramKey}]` : paramKey;
+  let data = cloneDeep(formData);
+  forEach(Object.keys(body), (paramKey) => {
+    const obj = body[paramKey];
+    const key = typeof originalKey !== 'undefined' ? `${originalKey}[${paramKey}]` : paramKey;
     if (isArray(obj)) {
       for (let k in obj) {
-        formData.append(`${key}[]`, obj[k]);
+        data.append(`${key}[]`, obj[k]);
       }
     } else if (isObject(obj)) {
-      formData = _transformFormBody(obj, formData, key);
+      data = _transformFormBody(obj, data, key);
     } else {
-      formData.append(key, obj);
+      data.append(key, obj);
     }
   });
-  return formData;
+  return data;
 }
 
 /**
@@ -75,35 +75,35 @@ function _transformUrlParams(params = {}) {
 }
 
 function _request(isFormData, method, url, body = {}, headers = {}, credentials = 'include') {
-  var defaultHeaders = { 'Accept': 'application/json' };
+  const defaultHeaders = { 'Accept': 'application/json' };
+  let newUrl = cloneDeep(url);
 
-  var fetchData = {
+  let fetchData = {
     method: toLower(method),
-    headers: Object.assign({}, defaultHeaders, headers)
+    headers: Object.assign({}, defaultHeaders, headers),
   };
 
   if (toLower(method) !== 'get') {
     fetchData.body = _transformBody(body, isFormData);
   } else {
-    var params = _transformUrlParams(body);
+    let params = _transformUrlParams(body);
     if (params.length > 0) {
-      url += '?' + params.join('&');
+      newUrl += '?' + params.join('&');
     }
   }
 
-  return fetch(url, fetchData)
-  .then((response) => {
-    if (response.status === 200 || response.status === 201) {
-      return response.json()
-        .then((data) => {
-          return resolve(data);
-        });
-    } else {
-      reject(response);
-    }
-  })
-  .catch((res) => {
-    reject(res);
+  return new Promise((resolve, reject) => {
+    fetch(newUrl, fetchData)
+      .then((response) => {
+        if (response.status === 200 || response.status === 201) {
+          response.json()
+            .then((data) => resolve(data))
+            .catch((res) => reject(res));
+        } else {
+          reject(response);
+        }
+      })
+      .catch((res) => reject(res));
   });
 }
 
@@ -116,7 +116,7 @@ function _request(isFormData, method, url, body = {}, headers = {}, credentials 
  *
  */
 function _apiRequest({method, route, form, external}, body = {}, headers = {}, credentials) {
-  let url = external ? route : `${_getBase()}${route}`;
+  const url = external ? route : `${_getBase()}${route}`;
   return _request(form, method, url, body, headers, credentials);
 }
 
@@ -144,8 +144,7 @@ function _parameterizeRoute(route, params) {
  * @param  {Object} credentials
  *
  */
-function _publicRequest(options, params, body, headers, credentials) {
-  if (!body) { body = {}; }
+function _publicRequest(options, params, body = {}, headers, credentials) {
   let cloned = cloneDeep(options);
   if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
   return _apiRequest(cloned, body, headers, credentials);
@@ -161,15 +160,14 @@ function _publicRequest(options, params, body, headers, credentials) {
  * @param  {Object} credentials
  *
  */
-function _requestWithToken(options, params, body, customToken, headers, credentials) {
-  if (!body) { body = {}; }
+function _requestWithToken(options, params, body = {}, customToken, headers, credentials) {
   let cloned = cloneDeep(options);
   if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
-  let token = LocalStorage.get('token');
-  headers = Object.assign({}, headers, {
-    'Authorization': 'Bearer ' + (customToken || token)
+  const token = LocalStorage.get('token');
+  const requestHeaders = Object.assign({}, headers, {
+    'Authorization': 'Bearer ' + (customToken || token),
   });
-  return _apiRequest(cloned, body, headers, credentials);
+  return _apiRequest(cloned, body, requestHeaders, credentials);
 }
 
 /**
