@@ -7,7 +7,7 @@ require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 import {forEach, cloneDeep, isArray, isObject, toLower} from 'lodash';
-import LocalStorage from 'localStorage';
+import LocalStorage from './localStorage';
 
 /**
  * Return the api url base
