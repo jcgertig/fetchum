@@ -44,3 +44,11 @@ const getRandomUser = generateRequest({
   route: 'http://uifaces.com/api/v1/random',
 });
 ```
+
+```
+import {localStorage} from 'fetchum';
+
+const setToken = (token) => {
+  localStorage.set('token', token);
+};
+```
