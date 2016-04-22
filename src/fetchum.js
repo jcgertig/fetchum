@@ -205,22 +205,3 @@ export const postFormReq = _request.bind(null, true, 'post');
 export const putFormReq = _request.bind(null, true, 'put');
 export const apiFormPost = _apiRequest.bind(null, true, 'post');
 export const apiFormPut = _apiRequest.bind(null, true, 'put');
-
-export default {
-  getReq,
-  postReq,
-  putReq,
-  deleteReq,
-  patchReq,
-  postFormReq,
-  putFormReq,
-  apiGet,
-  apiPost,
-  apiPut,
-  apiDelete,
-  apiPatch,
-  apiFormPost,
-  apiFormPut,
-  apiRequest,
-  generateRequest,
-};
