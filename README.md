@@ -2,6 +2,9 @@
  A better fetch api and LocalStorage Wrapper
 
 
+
+ [![npm version](https://badge.fury.io/js/fetchum.svg)](https://badge.fury.io/js/fetchum)
+
 ## Setup
 
 ```
