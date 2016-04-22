@@ -20,7 +20,7 @@ const Store = window.localStorage;
  */
 export const get = (id) => {
   try {
-    return JSON.parse(Store.getItem(`${prefix}${id}`)).value;
+    return JSON.parse(Store.getItem(`${prefix}-${id}`)).value;
   } catch (err) {
     return null;
   }
@@ -43,6 +43,32 @@ export const set = (id, value) => {
  */
 export const remove = (id) => {
   return Store.removeItem(`${prefix}${id}`);
+};
+
+/**
+ * Gets an token from localStorage
+ *
+ */
+export const getToken = () => {
+  return get('token');
+};
+
+/**
+ * Sets the token in localStorage
+ * @param  {Any} value
+ *
+ */
+export const setToken = (value) => {
+  return set('token', value);
+};
+
+/**
+ * Remove item from localStorage
+ * @param  {String} id
+ *
+ */
+export const removeToken = () => {
+  return remove('token');
 };
 
 /**
@@ -77,6 +103,9 @@ export default {
   get,
   set,
   remove,
+  getToken,
+  setToken,
+  removeToken,
   getHydratedState,
   setHydratedState,
   addHydratedState,

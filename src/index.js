@@ -1,6 +1,8 @@
 import * as fetchum from './fetchum';
-import localStorage from './localStorage';
+import storage from './localStorage';
 
 export * from './fetchum';
 
-export default Object.assign({}, fetchum, {localStorage});
+export const localStorage = storage;
+
+export default Object.assign({}, fetchum, {localStorage: storage});

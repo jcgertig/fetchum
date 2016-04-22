@@ -1,6 +1,6 @@
 {
   "name": "fetchum",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "A better fetch and local storage system",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",

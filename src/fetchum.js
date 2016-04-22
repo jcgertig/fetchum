@@ -1,4 +1,5 @@
 /* global FormData, fetch */
+
 /**
  * Fetchum - Better Fetch
  */
@@ -74,7 +75,16 @@ function _transformUrlParams(params = {}) {
   return formatedParams;
 }
 
-function _request(isFormData, method, url, body = {}, headers = {}, credentials = 'include') {
+/**
+ * Base request call
+ * @param  {Boolean} isFormData
+ * @param  {String} method
+ * @param  {String} url
+ * @param  {Object} body
+ * @param  {Object} headers
+ *
+ */
+function _request(isFormData, method, url, body = {}, headers = {}) {
   const defaultHeaders = { 'Accept': 'application/json' };
   let newUrl = cloneDeep(url);
 
@@ -109,15 +119,29 @@ function _request(isFormData, method, url, body = {}, headers = {}, credentials 
 
 /**
  * Calls the request and prepends route with base
+ * @param  {Boolean} form
+ * @param  {String} method
+ * @param  {String} route
+ * @param  {Object} body
+ * @param  {Object} headers
+ *
+ */
+function _apiRequest(form, method, route, body, headers) {
+  return _request(form, method, `${_getBase()}${route}`, body, headers);
+}
+
+/**
+ * Calls the request and prepends route with base
  * @param  {Object} options = {method, route, form, external}
  * @param  {Object} body
  * @param  {Object} headers
- * @param  {String} credentials
  *
  */
-function _apiRequest({method, route, form, external}, body = {}, headers = {}, credentials) {
-  const url = external ? route : `${_getBase()}${route}`;
-  return _request(form, method, url, body, headers, credentials);
+function _callRequest({method, route, form, external}, body, headers) {
+  if (external) {
+    return _request(form, method, route, body, headers);
+  }
+  return _apiRequest(form, method, route, body, headers);
 }
 
 /**
@@ -137,37 +161,35 @@ function _parameterizeRoute(route, params) {
 
 /**
  * Call a api request without a token header
- * @param  {Object} options - {method, token, route, external, form }
+ * @param  {Object} options - {method, token, route, external, form}
  * @param  {Object} params
  * @param  {Object} body
  * @param  {Object} headers
- * @param  {Object} credentials
  *
  */
-function _publicRequest(options, params, body = {}, headers, credentials) {
+function _publicRequest(options, params, body = {}, headers = {}) {
   let cloned = cloneDeep(options);
   if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
-  return _apiRequest(cloned, body, headers, credentials);
+  return _callRequest(cloned, body, headers);
 }
 
 /**
  * Call a api request and set Auth header
- * @param  {Object} options - {method, token, route, external, form }
+ * @param  {Object} options - {method, token, route, external, form}
  * @param  {Object} params
  * @param  {Object} body
- * @param  {String} customToken
  * @param  {Object} headers
- * @param  {Object} credentials
+ * @param  {String} customToken
  *
  */
-function _requestWithToken(options, params, body = {}, customToken, headers, credentials) {
+function _requestWithToken(options, params, body = {}, headers = {}, customToken) {
   let cloned = cloneDeep(options);
   if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
-  const token = LocalStorage.get('token');
+  const token = LocalStorage.getToken();
   const requestHeaders = Object.assign({}, headers, {
     'Authorization': 'Bearer ' + (customToken || token),
   });
-  return _apiRequest(cloned, body, requestHeaders, credentials);
+  return _callRequest(cloned, body, requestHeaders);
 }
 
 /**
@@ -176,6 +198,7 @@ function _requestWithToken(options, params, body = {}, customToken, headers, cre
  *
  */
 export const generateRequest = (options) => {
+  options.token = options.token || false;
   options.form = options.form || false;
   options.external = options.external || false;
   if (options.external) { return _publicRequest.bind(this, options); }
@@ -187,21 +210,24 @@ export const generateRequest = (options) => {
   );
 };
 
-export const getReq = _request.bind(null, false, 'get');
-export const postReq = _request.bind(null, false, 'post');
-export const putReq = _request.bind(null, false, 'put');
-export const deleteReq = _request.bind(null, false, 'delete');
-export const patchReq = _request.bind(null, false, 'patch');
+export const request = _request;
 
-export const apiGet = _apiRequest.bind(null, false, 'get');
-export const apiPost = _apiRequest.bind(null, false, 'post');
-export const apiPut = _apiRequest.bind(null, false, 'put');
-export const apiDelete = _apiRequest.bind(null, false, 'delete');
-export const apiPatch = _apiRequest.bind(null, false, 'patch');
+export const getReq = request.bind(null, false, 'get');
+export const putReq = request.bind(null, false, 'put');
+export const postReq = request.bind(null, false, 'post');
+export const patchReq = request.bind(null, false, 'patch');
+export const deleteReq = request.bind(null, false, 'delete');
+
+export const putFormReq = request.bind(null, true, 'put');
+export const postFormReq = request.bind(null, true, 'post');
 
 export const apiRequest = _apiRequest;
 
-export const postFormReq = _request.bind(null, true, 'post');
-export const putFormReq = _request.bind(null, true, 'put');
-export const apiFormPost = _apiRequest.bind(null, true, 'post');
-export const apiFormPut = _apiRequest.bind(null, true, 'put');
+export const apiGetReq = apiRequest.bind(null, false, 'get');
+export const apiPutReq = apiRequest.bind(null, false, 'put');
+export const apiPostReq = apiRequest.bind(null, false, 'post');
+export const apiPatchReq = apiRequest.bind(null, false, 'patch');
+export const apiDeleteReq = apiRequest.bind(null, false, 'delete');
+
+export const apiPutFormReq = apiRequest.bind(null, true, 'put');
+export const apiPostFormReq = apiRequest.bind(null, true, 'post');
