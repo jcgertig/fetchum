@@ -10,7 +10,6 @@ export const getPrefix = () => {
   return typeof window.STORAGE_PREFIX !== 'undefined' ? window.STORAGE_PREFIX : '';
 };
 
-const prefix = getPrefix();
 const Store = window.localStorage;
 
 /**
@@ -20,7 +19,7 @@ const Store = window.localStorage;
  */
 export const get = (id) => {
   try {
-    return JSON.parse(Store.getItem(`${prefix}-${id}`)).value;
+    return JSON.parse(Store.getItem(`${getPrefix()}-${id}`)).value;
   } catch (err) {
     return null;
   }
@@ -33,7 +32,7 @@ export const get = (id) => {
  *
  */
 export const set = (id, value) => {
-  return Store.setItem(`${prefix}${id}`, JSON.stringify({ value }));
+  return Store.setItem(`${getPrefix()}-${id}`, JSON.stringify({ value }));
 };
 
 /**
@@ -42,7 +41,7 @@ export const set = (id, value) => {
  *
  */
 export const remove = (id) => {
-  return Store.removeItem(`${prefix}${id}`);
+  return Store.removeItem(`${getPrefix()}-${id}`);
 };
 
 /**
@@ -97,16 +96,4 @@ export const setHydratedState = (state) => {
  */
 export const addHydratedState = (id, value) => {
   return set('state', Object.assign({}, getHydratedState(), { id: value }));
-};
-
-export default {
-  get,
-  set,
-  remove,
-  getToken,
-  setToken,
-  removeToken,
-  getHydratedState,
-  setHydratedState,
-  addHydratedState,
 };

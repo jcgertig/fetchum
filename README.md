@@ -147,25 +147,25 @@ const updateUser = (id, data) => {
 };
 ```
 
-### Api - `localStorage`
+### Api - `LocalStorage`
 Fetchum has a build in LocalStorage wrapper for convenience and for the
 specific use of getting the auth token.
 
 To use the `token` option in the `generateRequest` call you will need to use
-this `localStorage` wrapper;
+this `LocalStorage` wrapper;
 
 __Examples__
 ```
-import {localStorage} from 'fetchum';
+import {LocalStorage} from 'fetchum';
 
 const setToken = (token) => {
-  localStorage.set('token', token);
+  LocalStorage.set('token', token);
 };
 ```
 
 Login and out example
 ```
-import {localStorage, generateRequest} from 'fetchum';
+import {LocalStorage, generateRequest} from 'fetchum';
 
 const apiLogin = generateRequest({
   method: 'POST',
@@ -175,19 +175,19 @@ const apiLogin = generateRequest({
 const login = (data) => {
   apiLogin(data)
     .then((res) => {
-      localStorage.setToken(res.token);
-      localStorage.set('user', res.user);
+      LocalStorage.setToken(res.token);
+      LocalStorage.set('user', res.user);
     })
     .catch((res) => { console.warn(res); });
 };
 
 const getCurrentUser = () => {
-  return localStorage.get('user');
+  return LocalStorage.get('user');
 };
 
 const logout = () => {
-  localStorage.remove('user');
-  localStorage.removeToken();
+  LocalStorage.remove('user');
+  LocalStorage.removeToken();
 };
 ```
 
