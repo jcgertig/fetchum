@@ -19,6 +19,8 @@ function _getBase() {
   if (typeof process !== 'undefined' && typeof process.env !== 'undefined') {
     if (typeof process.env.API_BASE !== 'undefined') {
       base = process.env.API_BASE;
+    } else if (typeof window.API_BASE !== 'undefined') {
+      base = window.API_BASE;
     }
   } else if (typeof window.API_BASE !== 'undefined') {
     base = window.API_BASE;
