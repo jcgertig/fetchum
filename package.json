@@ -34,7 +34,8 @@
   "author": "Jonathan Gertig <jcgertig@gmail.com>",
   "peerDependencies": {
     "es6-promise": "^3.1.2",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "object.assign": "^4.0.3"
   },
   "license": "MIT",
   "devDependencies": {

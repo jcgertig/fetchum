@@ -1,3 +1,5 @@
+require('object.assign').shim();
+
 import * as fetchum from './fetchum';
 import * as storage from './localStorage';
 

@@ -1,6 +1,7 @@
 /**
  * LocalStorage Wrapper
  */
+require('object.assign').shim()
 
 /**
  * Return the storage prefix

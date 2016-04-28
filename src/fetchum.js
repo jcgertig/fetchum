@@ -4,6 +4,7 @@
  * Fetchum - Better Fetch
  */
 
+require('object.assign').shim();
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
