@@ -98,3 +98,12 @@ export const setHydratedState = (state) => {
 export const addHydratedState = (id, value) => {
   return set('state', assign({}, getHydratedState(), { id: value }));
 };
+
+/**
+ * Checks if an item exists
+ * @param  {string} id
+ *
+ */
+export const isSet = (id) => {
+  return get(id) !== null;
+};
