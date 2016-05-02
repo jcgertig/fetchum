@@ -157,7 +157,7 @@ function _callRequest({method, route, form, external}, body, headers) {
 function _parameterizeRoute(route, params) {
   let parameterized = cloneDeep(route);
   forEach(params, (val, key) => {
-    if (isUndefined(v)) { console.warn(`error: parameter ${key} was ${val}`); }
+    if (isUndefined(val)) { console.warn(`error: parameter ${key} was ${val}`); }
     parameterized = parameterized.replace(':' + key, val);
   });
   return parameterized;
