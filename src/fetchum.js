@@ -39,8 +39,11 @@ function _transformFormBody(body, formData, originalKey) {
   let data = formData;
   forEach(Object.keys(body), (paramKey) => {
     const obj = body[paramKey];
-    const key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : `${paramKey}[]`;
+    let key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
     if (isArray(obj)) {
+      if (key.indexOf('[') === -1) {
+        key = `${key}[]`;
+      }
       for (const val of obj) {
         data.append(key, val);
       }
