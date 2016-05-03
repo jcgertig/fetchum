@@ -3,12 +3,18 @@
 /**
  * Fetchum - Better Fetch
  */
-const assign = require('object.assign/polyfill')();
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined } from 'lodash';
+import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign as _assign } from 'lodash';
 import { getToken } from './localStorage';
+
+const assign = () => {
+  if (has(Object, 'assign')) {
+    return Object.assign.call(arguments);
+  }
+  return _assign.call(arguments);
+};
 
 /**
  * Return the api url base
@@ -120,7 +126,7 @@ function _request(isFormData, method, url, body = {}, headers = {}) {
           reject(response);
         }
       })
-      .catch((res) => reject(res));
+      .catch((response) => reject(response));
   });
 }
 
