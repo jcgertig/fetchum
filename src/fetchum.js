@@ -6,15 +6,13 @@
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign as _assign } from 'lodash';
+import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash';
 import { getToken } from './localStorage';
 
-const assign = () => {
-  if (has(Object, 'assign')) {
-    return Object.assign.call(arguments);
-  }
-  return _assign.call(arguments);
-};
+if (!has(Object, 'assign')) {
+  Object.assign = assign;
+}
+
 
 /**
  * Return the api url base
@@ -103,7 +101,7 @@ function _request(isFormData, method, url, body = {}, headers = {}) {
 
   const fetchData = {
     method: toLower(method),
-    headers: assign({}, defaultHeaders, headers),
+    headers: Object.assign({}, defaultHeaders, headers),
   };
 
   if (toLower(method) !== 'get') {
@@ -198,7 +196,7 @@ function _publicRequest(options, params, body = {}, headers = {}) {
 function _requestWithToken(options, params, body = {}, headers = {}, customToken) {
   const cloned = cloneDeep(options);
   if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
-  const requestHeaders = assign({}, headers, {
+  const requestHeaders = Object.assign({}, headers, {
     'Authorization': 'Bearer ' + (customToken || getToken()),
   });
   return _callRequest(cloned, body, requestHeaders);

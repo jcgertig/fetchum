@@ -1,14 +1,11 @@
 /**
  * LocalStorage Wrapper
  */
-import { isUndefined, has, assign as _assign } from 'lodash';
+import { isUndefined, has, assign } from 'lodash';
 
-const assign = () => {
-  if (has(Object, 'assign')) {
-    return Object.assign.call(arguments);
-  }
-  return _assign.call(arguments);
-};
+if (!has(Object, 'assign')) {
+  Object.assign = assign;
+}
 
 /**
  * Return the storage prefix
@@ -103,7 +100,7 @@ export const setHydratedState = (state) => {
  * @param  {Any}  value
  */
 export const addHydratedState = (id, value) => {
-  return set('state', assign({}, getHydratedState(), { id: value }));
+  return set('state', Object.assign({}, getHydratedState(), { id: value }));
 };
 
 /**
