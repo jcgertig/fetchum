@@ -45,17 +45,18 @@ function _transformFormBody(body, formData, originalKey) {
     const obj = body[paramKey];
     const key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
     if (isArray(obj)) {
-      for (const val of obj) {
+      for (let index = 0; index < obj.length; index++) {
+        const val = obj[index];
         if (isObject(val) || isArray(val)) {
-          data = _transformFormBody(val, data, key);
+          data = _transformFormBody(val, data, `${key}[${index}]`);
         } else {
-          data.append(key, val);
+          data.append(`${key}[${index}]`, val);
         }
       }
     } else if (isObject(obj)) {
       data = _transformFormBody(obj, data, key);
     } else {
-      data.append(`${key}[]`, obj);
+      data.append(key, obj);
     }
   });
   return data;
@@ -83,7 +84,7 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
     const obj = params[paramKey];
     const key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
     if (isArray(obj)) {
-      for (const index in obj) {
+      for (let index = 0; index < obj.length; index++) {
         const val = obj[index];
         if (isObject(val) || isArray(val)) {
           data = _transformUrlParams(val, data, `${key}[${index}]`);
