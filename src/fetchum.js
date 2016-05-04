@@ -82,16 +82,15 @@ function _transformBody(body = {}, isFormData = false) {
  */
 function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
   let data = formatedParams;
-  const keys = Object.keys(params);
-  for (const index in keys) {
-    const paramKey = keys[index];
+  for (const paramKey of Object.keys(params)) {
     const obj = params[paramKey];
     let key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
     if (isArray(obj)) {
-      if (key.indexOf('[') === -1) {
-        key = `${key}[${index}]`;
-      }
-      for (const val of obj) {
+      for (const index in obj) {
+        const val = obj[index];
+        if (key.indexOf('[') === -1) {
+          key = `${key}[${index}]`;
+        }
         if (isObject(val) || isArray(val)) {
           data = _transformUrlParams(val, data, key);
         } else {
