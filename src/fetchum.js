@@ -83,11 +83,12 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
     const obj = params[paramKey];
     const key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
     if (isArray(obj)) {
-      for (const val of obj) {
+      for (const index in obj) {
+        const val = obj[index];
         if (isObject(val) || isArray(val)) {
-          data = _transformUrlParams(val, data, key);
+          data = _transformUrlParams(val, data, `${key}[${index}]`);
         } else {
-          data.push(`${key}[]=` + encodeURIComponent(val));
+          data.push(`${key}[${index}]=` + encodeURIComponent(val));
         }
       }
     } else if (isObject(obj)) {
