@@ -49,7 +49,11 @@ function _transformFormBody(body, formData, originalKey) {
         key = `${key}[]`;
       }
       for (const val of obj) {
-        data.append(key, val);
+        if (isObject(val) || isArray(val)) {
+          data = _transformFormBody(val, data, key);
+        } else {
+          data.append(key, val);
+        }
       }
     } else if (isObject(obj)) {
       data = _transformFormBody(obj, data, key);
@@ -76,12 +80,29 @@ function _transformBody(body = {}, isFormData = false) {
  * @param  {Object} params
  *
  */
-function _transformUrlParams(params = {}) {
-  const formatedParams = [];
-  forEach(Object.keys(params), (key) => {
-    formatedParams.push(`${key}=` + encodeURIComponent(params[key]));
+function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
+  let data = formatedParams;
+  forEach(Object.keys(params), (paramKey) => {
+    const obj = params[paramKey];
+    let key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
+    if (isArray(obj)) {
+      if (key.indexOf('[') === -1) {
+        key = `${key}[]`;
+      }
+      for (const val of obj) {
+        if (isObject(val) || isArray(val)) {
+          data = _transformUrlParams(val, data, key);
+        } else {
+          data.push(`${key}=` + encodeURIComponent(val));
+        }
+      }
+    } else if (isObject(obj)) {
+      data = _transformUrlParams(obj, data, key);
+    } else {
+      data.push(`${key}=` + encodeURIComponent(params[key]));
+    }
   });
-  return formatedParams;
+  return data;
 }
 
 /**
