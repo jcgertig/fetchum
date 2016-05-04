@@ -45,10 +45,11 @@ function _transformFormBody(body, formData, originalKey) {
     const obj = body[paramKey];
     let key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
     if (isArray(obj)) {
-      if (key.indexOf('[') === -1) {
-        key = `${key}[]`;
-      }
-      for (const val of obj) {
+      for (const index in obj) {
+        const val = obj[index];
+        if (key.indexOf('[') === -1) {
+          key = `${key}[${index}]`;
+        }
         if (isObject(val) || isArray(val)) {
           data = _transformFormBody(val, data, key);
         } else {
