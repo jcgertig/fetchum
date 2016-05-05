@@ -1,4 +1,4 @@
-import { assign } from 'lodash';
+import { assign, has } from 'lodash';
 
 if (!has(Object, 'assign')) {
   Object.assign = assign;
