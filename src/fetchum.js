@@ -136,7 +136,7 @@ function _request(isFormData, method, url, body = {}, headers = {}) {
         if (response.status === 200 || response.status === 201) {
           response.json()
             .then((data) => resolve(data))
-            .catch((res) => reject(res));
+            .catch((res) => reject(response, res));
         } else {
           reject(response);
         }
