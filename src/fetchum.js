@@ -33,6 +33,15 @@ function _getBase() {
 }
 
 /**
+ * Check to see if object is json description of file
+ * @param  {Object} val
+ *
+ */
+function _isFile(val) {
+  return (has(val, 'preview') && val.preview.indexOf('blob') > -1);
+}
+
+/**
  * Recursive tranform json to form data
  * @param  {Object} body
  * @param  {Object} formData
@@ -47,7 +56,7 @@ function _transformFormBody(body, formData, originalKey) {
     if (isArray(obj)) {
       for (let index = 0; index < obj.length; index++) {
         const val = obj[index];
-        if (isObject(val) || isArray(val)) {
+        if ((isObject(val) && !_isFile(val)) || isArray(val)) {
           data = _transformFormBody(val, data, `${key}[${index}]`);
         } else {
           data.append(`${key}[${index}]`, val);
