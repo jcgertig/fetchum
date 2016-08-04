@@ -119,15 +119,18 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
  * @param  {Object} headers
  *
  */
-function _request(isFormData, method, url, body = {}, headers = {}) {
+function _request(isFormData, method, url, body = {}, headers = {}, others = {}) {
   const defaultHeaders = {
     'Accept': 'application/json',
   };
+  if (!isFormData) {
+    defaultHeaders['Content-Type'] = 'application/json';
+  }
   let newUrl = cloneDeep(url);
 
   const fetchData = {
     method: toLower(method),
-    headers: Object.assign({}, defaultHeaders, headers),
+    headers: new Headers(Object.assign({}, defaultHeaders, headers)),
   };
 
   if (toLower(method) !== 'get') {
@@ -139,8 +142,10 @@ function _request(isFormData, method, url, body = {}, headers = {}) {
     }
   }
 
+  const reqst = new Request(newUrl, Object.assign({}, others, fetchData));
+
   return new Promise((resolve, reject) => {
-    fetch(newUrl, fetchData)
+    fetch(reqst)
       .then((response) => {
         if (response.status === 200 || response.status === 201) {
           response.json()
@@ -163,8 +168,8 @@ function _request(isFormData, method, url, body = {}, headers = {}) {
  * @param  {Object} headers
  *
  */
-function _apiRequest(form, method, route, body, headers) {
-  return _request(form, method, `${_getBase()}${route}`, body, headers);
+function _apiRequest(form, method, route, body, headers, others) {
+  return _request(form, method, `${_getBase()}${route}`, body, headers, others);
 }
 
 /**
@@ -174,11 +179,11 @@ function _apiRequest(form, method, route, body, headers) {
  * @param  {Object} headers
  *
  */
-function _callRequest({method, route, form, external}, body, headers) {
+function _callRequest({method, route, form, external, others}, body, headers) {
   if (external) {
-    return _request(form, method, route, body, headers);
+    return _request(form, method, route, body, headers, others);
   }
-  return _apiRequest(form, method, route, body, headers);
+  return _apiRequest(form, method, route, body, headers, others);
 }
 
 /**
