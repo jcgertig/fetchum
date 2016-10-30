@@ -1,6 +1,6 @@
 var _this = this;
 
-/* global FormData, fetch, Headers, Request, window, File, Blob */
+/* global FormData, fetch, Headers, Request, window, File, Blob, self */
 import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash';
 import { getToken } from './localStorage';
 
@@ -21,13 +21,11 @@ function _getBase() {
   var base = '';
   if (!isUndefined(process) && !isUndefined(process.env) && !isUndefined(process.env.API_BASE)) {
     base = process.env.API_BASE;
-    globals.console.log('GOT BASE process', base);
+    self.console.log('GOT BASE process', base);
+  } else if (base === '' && !isUndefined(window) && !isUndefined(window.API_BASE)) {
+    base = window.API_BASE;
+    window.console.log('GOT BASE global', base);
   }
-  if (base === '' && !isUndefined(global) && !isUndefined(global.API_BASE)) {
-    base = global.API_BASE;
-    globals.console.log('GOT BASE global', base);
-  }
-  globals.console.log('GOT BASE', base);
   return base;
 }
 

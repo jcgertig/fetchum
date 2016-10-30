@@ -22932,7 +22932,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process, global, console) {'use strict';
+	/* WEBPACK VAR INJECTION */(function(process, console) {'use strict';
 
 	exports.__esModule = true;
 	exports.apiPostFormReq = exports.apiPutFormReq = exports.apiDeleteReq = exports.apiPatchReq = exports.apiPostReq = exports.apiPutReq = exports.apiGetReq = exports.apiRequest = exports.postFormReq = exports.putFormReq = exports.deleteReq = exports.patchReq = exports.postReq = exports.putReq = exports.getReq = exports.request = exports.generateCRUDRequests = exports.generateRequest = undefined;
@@ -22944,7 +22944,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Fetchum - Better Fetch
 	 */
-	/* global FormData, fetch, Headers, Request, window, File, Blob */
+	/* global FormData, fetch, Headers, Request, window, File, Blob, self */
 	__webpack_require__(23).polyfill();
 
 	if (!(0, _lodash.has)(Object, 'assign')) {
@@ -22959,13 +22959,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var base = '';
 	  if (!(0, _lodash.isUndefined)(process) && !(0, _lodash.isUndefined)(process.env) && !(0, _lodash.isUndefined)(process.env.API_BASE)) {
 	    base = process.env.API_BASE;
-	    globals.console.log('GOT BASE process', base);
+	    self.console.log('GOT BASE process', base);
+	  } else if (base === '' && !(0, _lodash.isUndefined)(window) && !(0, _lodash.isUndefined)(window.API_BASE)) {
+	    base = window.API_BASE;
+	    window.console.log('GOT BASE global', base);
 	  }
-	  if (base === '' && !(0, _lodash.isUndefined)(global) && !(0, _lodash.isUndefined)(global.API_BASE)) {
-	    base = global.API_BASE;
-	    globals.console.log('GOT BASE global', base);
-	  }
-	  globals.console.log('GOT BASE', base);
 	  return base;
 	}
 
@@ -23306,7 +23304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var apiPutFormReq = exports.apiPutFormReq = apiRequest.bind(null, true, 'put');
 	var apiPostFormReq = exports.apiPostFormReq = apiRequest.bind(null, true, 'post');
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), (function() { return this; }()), __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(2)))
 
 /***/ },
 /* 21 */
