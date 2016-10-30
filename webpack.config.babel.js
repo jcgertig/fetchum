@@ -28,6 +28,7 @@ export default {
   module: {
     loaders: [
       { test: /\.js$/, loaders: ['babel'], exclude: /node_modules/ },
+      { test: /\.json$/, loaders: ['json'] },
     ],
   },
 
@@ -40,6 +41,13 @@ export default {
     filename,
     library: 'Fetchum',
     libraryTarget: 'umd',
+  },
+
+  node: {
+    console: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
   },
 
   plugins,

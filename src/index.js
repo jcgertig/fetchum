@@ -11,4 +11,4 @@ export * from './fetchum';
 
 export const LocalStorage = storage;
 
-export default Object.assign({}, fetchum, {LocalStorage: storage});
+export default Object.assign({}, fetchum, { LocalStorage: storage });

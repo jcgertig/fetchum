@@ -1,4 +1,6 @@
-/* global FormData, fetch */
+/* global FormData, fetch, Headers, Request, window, File, Blob */
+import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash';
+import { getToken } from './localStorage';
 
 /**
  * Fetchum - Better Fetch
@@ -6,13 +8,9 @@
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash';
-import { getToken } from './localStorage';
-
 if (!has(Object, 'assign')) {
   Object.assign = assign;
 }
-
 
 /**
  * Return the api url base
@@ -20,13 +18,10 @@ if (!has(Object, 'assign')) {
  */
 function _getBase() {
   let base = '';
-  if (!isUndefined(process) && !isUndefined(process.env)) {
-    if (!isUndefined(process.env.API_BASE)) {
-      base = process.env.API_BASE;
-    } else if (!isUndefined(window.API_BASE)) {
-      base = window.API_BASE;
-    }
-  } else if (!isUndefined(window.API_BASE)) {
+  if (!isUndefined(process) && !isUndefined(process.env) && !isUndefined(process.env.API_BASE)) {
+    base = process.env.API_BASE;
+  }
+  if (base === '' && !isUndefined(window.API_BASE)) {
     base = window.API_BASE;
   }
   return base;
@@ -98,13 +93,13 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
         if (isObject(val) || isArray(val)) {
           data = _transformUrlParams(val, data, `${key}[${index}]`);
         } else {
-          data.push(`${key}[${index}]=` + encodeURIComponent(val));
+          data.push(`${key}[${index}]=${encodeURIComponent(val)}`);
         }
       }
     } else if (isObject(obj)) {
       data = _transformUrlParams(obj, data, key);
     } else {
-      data.push(`${key}=` + encodeURIComponent(obj));
+      data.push(`${key}=${encodeURIComponent(obj)}`);
     }
   }
   return data;
@@ -121,7 +116,7 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
  */
 function _request(isFormData, method, url, body = {}, headers = {}, others = {}) {
   const defaultHeaders = {
-    'Accept': 'application/json',
+    Accept: 'application/json',
   };
   if (!isFormData) {
     defaultHeaders['Content-Type'] = 'application/json';
@@ -138,7 +133,7 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
   } else {
     const params = _transformUrlParams(body);
     if (params.length > 0) {
-      newUrl += '?' + params.join('&');
+      newUrl += `?${params.join('&')}`;
     }
   }
 
@@ -147,10 +142,19 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
   return new Promise((resolve, reject) => {
     fetch(reqst)
       .then((response) => {
-        if (response.status === 200 || response.status === 201) {
-          response.json()
-            .then((data) => resolve(data))
-            .catch((res) => reject(response, res));
+        if (response.ok) {
+          response.text()
+            .then((data) => {
+              let json = null;
+              try {
+                json = JSON.parse(data);
+              } catch (e) {
+                // test parsing json
+              }
+              response.data = (json !== null ? json : data);
+              return resolve(response);
+            })
+            .catch(() => reject(response));
         } else {
           reject(response);
         }
@@ -179,7 +183,7 @@ function _apiRequest(form, method, route, body, headers, others) {
  * @param  {Object} headers
  *
  */
-function _callRequest({method, route, form, external, others}, body, headers) {
+function _callRequest({ method, route, form, external, others }, body, headers) {
   if (external) {
     return _request(form, method, route, body, headers, others);
   }
@@ -196,7 +200,7 @@ function _parameterizeRoute(route, params) {
   let parameterized = cloneDeep(route);
   forEach(params, (val, key) => {
     if (isUndefined(val)) { console.warn(`error: parameter ${key} was ${val}`); }
-    parameterized = parameterized.replace(':' + key, val);
+    parameterized = parameterized.replace(`:${key}`, val);
   });
   return parameterized;
 }
@@ -224,11 +228,11 @@ function _publicRequest(options, params, body = {}, headers = {}) {
  * @param  {String} customToken
  *
  */
-function _requestWithToken(options, params, body = {}, headers = {}, customToken) {
+function _requestWithToken(options, params, body = {}, headers = {}, customToken = null, tokenType = 'Bearer') {
   const cloned = cloneDeep(options);
   if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
   const requestHeaders = Object.assign({}, headers, {
-    'Authorization': 'Bearer ' + (customToken || getToken()),
+    Authorization: `${tokenType} ${customToken !== null ? customToken : getToken()}`,
   });
   return _callRequest(cloned, body, requestHeaders);
 }
@@ -239,17 +243,54 @@ function _requestWithToken(options, params, body = {}, headers = {}, customToken
  *
  */
 export const generateRequest = (options) => {
-  options.token = options.token || false;
-  options.form = options.form || false;
-  options.external = options.external || false;
-  if (options.external) { return _publicRequest.bind(this, options); }
+  const clone = cloneDeep(options);
+  clone.token = clone.token || false;
+  clone.form = clone.form || false;
+  clone.external = clone.external || false;
+  if (clone.external) { return _publicRequest.bind(this, clone); }
 
-  return options.token ? (
-    _requestWithToken.bind(this, options)
+  return clone.token ? (
+    _requestWithToken.bind(this, clone)
   ) : (
-    _publicRequest.bind(this, options)
+    _publicRequest.bind(this, clone)
   );
 };
+
+/**
+ * Generate a api request
+ * @param  {Object} options - {method, token, route, external, form }
+ *
+ */
+export const generateCRUDRequests = (baseUrl = '', idVar = '', token = false) => (
+  {
+    fetchAll: generateRequest({
+      token,
+      method: 'GET',
+      route: baseUrl,
+    }),
+    create: generateRequest({
+      token,
+      method: 'POST',
+      route: baseUrl,
+    }),
+    fetchOne: generateRequest({
+      token,
+      method: 'GET',
+      route: `${baseUrl}/:${idVar}`,
+    }),
+    update: generateRequest({
+      token,
+      method: 'PUT',
+      route: `${baseUrl}/:${idVar}`,
+    }),
+    delete: generateRequest({
+      token,
+      method: 'DELETE',
+      route: `${baseUrl}/:${idVar}`,
+    }),
+  }
+);
+
 
 export const request = _request;
 
