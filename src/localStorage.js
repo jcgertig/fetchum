@@ -10,7 +10,7 @@ if (!has(Object, 'assign')) {
 
 const PRE_VAR = 'STORAGE_PREFIX';
 function getStore() {
-  if (isUndefined(window) || isUndefined(window.localStorage) || window.localStorage === null) {
+  if (typeof process === 'object' && `${process}` === '[object process]') {
     return require('node-localstorage').LocalStorage;
   }
   return window.localStorage;

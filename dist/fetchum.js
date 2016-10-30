@@ -21028,7 +21028,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var PRE_VAR = 'STORAGE_PREFIX';
 	function getStore() {
-	  if ((0, _lodash.isUndefined)(window) || (0, _lodash.isUndefined)(window.localStorage) || window.localStorage === null) {
+	  if (typeof process === 'object' && '' + process === '[object process]') {
 	    return __webpack_require__(31).LocalStorage;
 	  }
 	  return window.localStorage;
@@ -22957,10 +22957,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	function _getBase() {
 	  var base = '';
-	  if (!(0, _lodash.isUndefined)(process) && !(0, _lodash.isUndefined)(process.env) && !(0, _lodash.isUndefined)(process.env.API_BASE)) {
-	    base = process.env.API_BASE;
-	    self.console.log('GOT BASE process', base);
-	  } else if (base === '' && !(0, _lodash.isUndefined)(window) && !(0, _lodash.isUndefined)(window.API_BASE)) {
+	  if (typeof process === 'object' && '' + process === '[object process]') {
+	    if (!(0, _lodash.isUndefined)(process.env) && !(0, _lodash.isUndefined)(process.env.API_BASE)) {
+	      base = process.env.API_BASE;
+	      self.console.log('GOT BASE process', base);
+	    }
+	    return base;
+	  }
+	  if (!(0, _lodash.isUndefined)(window.API_BASE)) {
 	    base = window.API_BASE;
 	    window.console.log('GOT BASE global', base);
 	  }
