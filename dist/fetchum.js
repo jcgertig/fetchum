@@ -22975,13 +22975,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (typeof process === 'object' && '' + process === '[object process]') {
 	    if (!(0, _lodash.isUndefined)(process.env) && !(0, _lodash.isUndefined)(process.env.API_BASE)) {
 	      base = process.env.API_BASE;
-	      self.console.log('GOT BASE process', base);
+	      console.log('GOT BASE process', base);
 	    }
 	    return base;
 	  }
 	  if (!(0, _lodash.isUndefined)(window.API_BASE)) {
 	    base = window.API_BASE;
-	    window.console.log('GOT BASE global', base);
+	    console.log('GOT BASE global', base);
 	  }
 	  return base;
 	}
