@@ -23098,7 +23098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var headers = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
 	  var others = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
-
+	  console.log('hit request');
 	  var defaultHeaders = {
 	    Accept: 'application/json'
 	  };
@@ -23122,6 +23122,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      newUrl += '?' + params.join('&');
 	    }
 	  }
+
+	  console.log('hit request', newUrl, method);
 
 	  var reqst = new Request(newUrl, Object.assign({}, others, fetchData));
 
@@ -23159,6 +23161,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 	function _apiRequest(form, method, route, body, headers, others) {
+	  console.log('hit api');
 	  return _request(form, method, '' + _getBase() + route, body, headers, others);
 	}
 
@@ -23176,6 +23179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      external = _ref2.external,
 	      others = _ref2.others;
 
+	  console.log('hit call');
 	  if (external) {
 	    return _request(form, method, route, body, headers, others);
 	  }
@@ -23211,6 +23215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  var headers = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
+	  console.log('hit public');
 	  var cloned = (0, _lodash.cloneDeep)(options);
 	  if (params) {
 	    cloned.route = _parameterizeRoute(cloned.route, params);
