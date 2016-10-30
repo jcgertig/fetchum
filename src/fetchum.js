@@ -19,13 +19,13 @@ function _getBase() {
   let base = '';
   if (!isUndefined(process) && !isUndefined(process.env) && !isUndefined(process.env.API_BASE)) {
     base = process.env.API_BASE;
-    console.log('GOT BASE process', base);
+    globals.console.log('GOT BASE process', base);
   }
   if (base === '' && !isUndefined(global) && !isUndefined(global.API_BASE)) {
     base = global.API_BASE;
-    console.log('GOT BASE global', base);
+    globals.console.log('GOT BASE global', base);
   }
-  console.log('GOT BASE', base);
+  globals.console.log('GOT BASE', base);
   return base;
 }
 
