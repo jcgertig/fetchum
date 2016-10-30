@@ -1,4 +1,5 @@
 /* global FormData, fetch, Headers, Request, window, File, Blob */
+import 'fetch-everywhere';
 import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash';
 import { getToken } from './localStorage';
 
@@ -6,7 +7,6 @@ import { getToken } from './localStorage';
  * Fetchum - Better Fetch
  */
 require('es6-promise').polyfill();
-require('isomorphic-fetch');
 
 if (!has(Object, 'assign')) {
   Object.assign = assign;
