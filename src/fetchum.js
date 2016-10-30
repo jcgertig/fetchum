@@ -20,13 +20,11 @@ function _getBase() {
   if (typeof process === 'object' && `${process}` === '[object process]') {
     if (!isUndefined(process.env) && !isUndefined(process.env.API_BASE)) {
       base = process.env.API_BASE;
-      console.log('GOT BASE process', base);
     }
     return base;
   }
   if (!isUndefined(window.API_BASE)) {
     base = window.API_BASE;
-    console.log('GOT BASE global', base);
   }
   return base;
 }
