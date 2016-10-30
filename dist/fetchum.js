@@ -57,8 +57,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	exports.__esModule = true;
+	exports.LocalStorage = undefined;
 
-	var _fetchum = __webpack_require__(18);
+	var _fetchum = __webpack_require__(19);
 
 	Object.keys(_fetchum).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -70,17 +71,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _storage = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./storage\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _localStorage = __webpack_require__(11);
 
-	Object.keys(_storage).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _storage[key];
-	    }
-	  });
-	});
+	var storage = _interopRequireWildcard(_localStorage);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
 	var LocalStorage = exports.LocalStorage = storage;
 
 /***/ },
@@ -315,7 +311,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	util.inherits = __webpack_require__(3);
 	/*</replacement>*/
 
-	var Readable = __webpack_require__(15);
+	var Readable = __webpack_require__(16);
 	var Writable = __webpack_require__(9);
 
 	util.inherits(Duplex, Readable);
@@ -4041,6 +4037,144 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	exports.__esModule = true;
+	exports.isSet = exports.addHydratedState = exports.setHydratedState = exports.getHydratedState = exports.removeToken = exports.setToken = exports.getToken = exports.remove = exports.set = exports.get = exports.getPrefix = undefined;
+
+	var _lodash = __webpack_require__(13);
+
+	if (!(0, _lodash.has)(Object, 'assign')) {
+	  Object.assign = _lodash.assign;
+	} /* global FormData, fetch, Headers, Request, window, File, Blob */
+	/**
+	 * LocalStorage Wrapper
+	 */
+
+
+	var PRE_VAR = 'STORAGE_PREFIX';
+	function getStore() {
+	  if (typeof process === 'object' && '' + process === '[object process]') {
+	    return __webpack_require__(29).LocalStorage;
+	  }
+	  return window.localStorage;
+	}
+
+	/**
+	 * Return the storage prefix
+	 *
+	 */
+	var getPrefix = exports.getPrefix = function getPrefix() {
+	  var prefix = '';
+	  if (!(0, _lodash.isUndefined)(process) && !(0, _lodash.isUndefined)(process.env) && !(0, _lodash.isUndefined)(process.env[PRE_VAR])) {
+	    prefix = process.env[PRE_VAR];
+	  }
+	  if (prefix === '' && !(0, _lodash.isUndefined)(window) && !(0, _lodash.isUndefined)(window, PRE_VAR)) {
+	    prefix = window[PRE_VAR];
+	  }
+	  return prefix;
+	};
+
+	/**
+	 * Gets an item from localStorage
+	 * @param  {string} id
+	 *
+	 */
+	var get = exports.get = function get(id) {
+	  try {
+	    return JSON.parse(getStore().getItem(getPrefix() + '-' + id)).value;
+	  } catch (err) {
+	    return null;
+	  }
+	};
+
+	/**
+	 * Sets an item in localStorage
+	 * @param  {String} id
+	 * @param  {Any}    value
+	 *
+	 */
+	var set = exports.set = function set(id, value) {
+	  return getStore().setItem(getPrefix() + '-' + id, JSON.stringify({ value: value }));
+	};
+
+	/**
+	 * Remove item from localStorage
+	 * @param  {String} id
+	 *
+	 */
+	var remove = exports.remove = function remove(id) {
+	  return getStore().removeItem(getPrefix() + '-' + id);
+	};
+
+	/**
+	 * Gets an token from localStorage
+	 *
+	 */
+	var getToken = exports.getToken = function getToken() {
+	  return get('token');
+	};
+
+	/**
+	 * Sets the token in localStorage
+	 * @param  {Any} value
+	 *
+	 */
+	var setToken = exports.setToken = function setToken(value) {
+	  return set('token', value);
+	};
+
+	/**
+	 * Remove item from localStorage
+	 * @param  {String} id
+	 *
+	 */
+	var removeToken = exports.removeToken = function removeToken() {
+	  return remove('token');
+	};
+
+	/**
+	 * Return state to rehydrate store
+	 * @return {Object}
+	 *
+	 */
+	var getHydratedState = exports.getHydratedState = function getHydratedState() {
+	  var state = get('state');
+	  return state || {};
+	};
+
+	/**
+	 * Sets the hydrated state
+	 * @param  {Object} state
+	 *
+	 */
+	var setHydratedState = exports.setHydratedState = function setHydratedState(state) {
+	  return set('state', state);
+	};
+
+	/**
+	 * Adds a key to hydrated state
+	 * @param  {String} id
+	 * @param  {Any}  value
+	 */
+	var addHydratedState = exports.addHydratedState = function addHydratedState(id, value) {
+	  return set('state', Object.assign({}, getHydratedState(), { id: value }));
+	};
+
+	/**
+	 * Checks if an item exists
+	 * @param  {string} id
+	 *
+	 */
+	var isSet = exports.isSet = function isSet(id) {
+	  return get(id) !== null;
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict'
 
 	var fs = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"fs\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()))
@@ -4065,7 +4199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -21054,7 +21188,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(42)(module)))
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	module.exports = bindActor
@@ -21076,7 +21210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -21128,7 +21262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -21257,7 +21391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.encoding = null;
 	  if (options.encoding) {
 	    if (!StringDecoder)
-	      StringDecoder = __webpack_require__(16).StringDecoder;
+	      StringDecoder = __webpack_require__(17).StringDecoder;
 	    this.decoder = new StringDecoder(options.encoding);
 	    this.encoding = options.encoding;
 	  }
@@ -21367,7 +21501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// backwards compatibility.
 	Readable.prototype.setEncoding = function(enc) {
 	  if (!StringDecoder)
-	    StringDecoder = __webpack_require__(16).StringDecoder;
+	    StringDecoder = __webpack_require__(17).StringDecoder;
 	  this._readableState.decoder = new StringDecoder(enc);
 	  this._readableState.encoding = enc;
 	  return this;
@@ -22086,7 +22220,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -22313,7 +22447,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -22810,7 +22944,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22818,9 +22952,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.__esModule = true;
 	exports.apiPostFormReq = exports.apiPutFormReq = exports.apiDeleteReq = exports.apiPatchReq = exports.apiPostReq = exports.apiPutReq = exports.apiGetReq = exports.apiRequest = exports.postFormReq = exports.putFormReq = exports.deleteReq = exports.patchReq = exports.postReq = exports.putReq = exports.getReq = exports.request = exports.generateCRUDRequests = exports.generateRequest = undefined;
 
-	var _lodash = __webpack_require__(12);
+	var _lodash = __webpack_require__(13);
 
-	var _localStorage = __webpack_require__(19);
+	var _localStorage = __webpack_require__(11);
 
 	/**
 	 * Fetchum - Better Fetch
@@ -23189,144 +23323,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var apiPutFormReq = exports.apiPutFormReq = apiRequest.bind(null, true, 'put');
 	var apiPostFormReq = exports.apiPostFormReq = apiRequest.bind(null, true, 'post');
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	exports.__esModule = true;
-	exports.isSet = exports.addHydratedState = exports.setHydratedState = exports.getHydratedState = exports.removeToken = exports.setToken = exports.getToken = exports.remove = exports.set = exports.get = exports.getPrefix = undefined;
-
-	var _lodash = __webpack_require__(12);
-
-	if (!(0, _lodash.has)(Object, 'assign')) {
-	  Object.assign = _lodash.assign;
-	} /* global FormData, fetch, Headers, Request, window, File, Blob */
-	/**
-	 * LocalStorage Wrapper
-	 */
-
-
-	var PRE_VAR = 'STORAGE_PREFIX';
-	function getStore() {
-	  if (typeof process === 'object' && '' + process === '[object process]') {
-	    return __webpack_require__(29).LocalStorage;
-	  }
-	  return window.localStorage;
-	}
-
-	/**
-	 * Return the storage prefix
-	 *
-	 */
-	var getPrefix = exports.getPrefix = function getPrefix() {
-	  var prefix = '';
-	  if (!(0, _lodash.isUndefined)(process) && !(0, _lodash.isUndefined)(process.env) && !(0, _lodash.isUndefined)(process.env[PRE_VAR])) {
-	    prefix = process.env[PRE_VAR];
-	  }
-	  if (prefix === '' && !(0, _lodash.isUndefined)(window) && !(0, _lodash.isUndefined)(window, PRE_VAR)) {
-	    prefix = window[PRE_VAR];
-	  }
-	  return prefix;
-	};
-
-	/**
-	 * Gets an item from localStorage
-	 * @param  {string} id
-	 *
-	 */
-	var get = exports.get = function get(id) {
-	  try {
-	    return JSON.parse(getStore().getItem(getPrefix() + '-' + id)).value;
-	  } catch (err) {
-	    return null;
-	  }
-	};
-
-	/**
-	 * Sets an item in localStorage
-	 * @param  {String} id
-	 * @param  {Any}    value
-	 *
-	 */
-	var set = exports.set = function set(id, value) {
-	  return getStore().setItem(getPrefix() + '-' + id, JSON.stringify({ value: value }));
-	};
-
-	/**
-	 * Remove item from localStorage
-	 * @param  {String} id
-	 *
-	 */
-	var remove = exports.remove = function remove(id) {
-	  return getStore().removeItem(getPrefix() + '-' + id);
-	};
-
-	/**
-	 * Gets an token from localStorage
-	 *
-	 */
-	var getToken = exports.getToken = function getToken() {
-	  return get('token');
-	};
-
-	/**
-	 * Sets the token in localStorage
-	 * @param  {Any} value
-	 *
-	 */
-	var setToken = exports.setToken = function setToken(value) {
-	  return set('token', value);
-	};
-
-	/**
-	 * Remove item from localStorage
-	 * @param  {String} id
-	 *
-	 */
-	var removeToken = exports.removeToken = function removeToken() {
-	  return remove('token');
-	};
-
-	/**
-	 * Return state to rehydrate store
-	 * @return {Object}
-	 *
-	 */
-	var getHydratedState = exports.getHydratedState = function getHydratedState() {
-	  var state = get('state');
-	  return state || {};
-	};
-
-	/**
-	 * Sets the hydrated state
-	 * @param  {Object} state
-	 *
-	 */
-	var setHydratedState = exports.setHydratedState = function setHydratedState(state) {
-	  return set('state', state);
-	};
-
-	/**
-	 * Adds a key to hydrated state
-	 * @param  {String} id
-	 * @param  {Any}  value
-	 */
-	var addHydratedState = exports.addHydratedState = function addHydratedState(id, value) {
-	  return set('state', Object.assign({}, getHydratedState(), { id: value }));
-	};
-
-	/**
-	 * Checks if an item exists
-	 * @param  {string} id
-	 *
-	 */
-	var isSet = exports.isSet = function isSet(id) {
-	  return get(id) !== null;
-	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
@@ -24638,11 +24634,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || '')) {
 	  process.on('exit', function() {
 	    debug(queue)
-	    __webpack_require__(17).equal(queue.length, 0)
+	    __webpack_require__(18).equal(queue.length, 0)
 	  })
 	}
 
-	module.exports = patch(__webpack_require__(11))
+	module.exports = patch(__webpack_require__(12))
 	if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH) {
 	  module.exports = patch(fs)
 	}
@@ -25010,7 +25006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var fs = __webpack_require__(11)
+	/* WEBPACK VAR INJECTION */(function(process) {var fs = __webpack_require__(12)
 	var constants = __webpack_require__(28)
 
 	var origCwd = process.cwd
@@ -26361,7 +26357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = chain
-	var bindActor = __webpack_require__(13)
+	var bindActor = __webpack_require__(14)
 	chain.first = {} ; chain.last = {}
 	function chain (things, cb) {
 	  var res = []
@@ -26387,7 +26383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	exports.asyncMap = __webpack_require__(31)
-	exports.bindActor = __webpack_require__(13)
+	exports.bindActor = __webpack_require__(14)
 	exports.chain = __webpack_require__(32)
 
 
@@ -26411,20 +26407,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(14)
+	module.exports = __webpack_require__(15)
 
 
 /***/ },
 /* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(15);
+	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(16);
 	exports.Stream = __webpack_require__(6);
 	exports.Readable = exports;
 	exports.Writable = __webpack_require__(9);
 	exports.Duplex = __webpack_require__(2);
 	exports.Transform = __webpack_require__(8);
-	exports.PassThrough = __webpack_require__(14);
+	exports.PassThrough = __webpack_require__(15);
 	if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 	  module.exports = __webpack_require__(6);
 	}
