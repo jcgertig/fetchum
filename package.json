@@ -2,7 +2,7 @@
   "name": "fetchum",
   "version": "3.0.0",
   "description": "A better fetch and local storage system",
-  "main": "dist/fetchum.js",
+  "main": "s/index.js",
   "jsnext:main": "es/index.js",
   "module": "es/index.js",
   "files": [
