@@ -1,47 +1,11 @@
-/* global FormData, fetch, Headers, Request, window, File, Blob, self */
+/* global FormData, fetch, Headers, Request, window, File, Blob */
 import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash';
 import { getToken } from './localStorage';
 
 /**
  * Fetchum - Better Fetch
  */
-global.self = global;
 require('es6-promise').polyfill();
-
-/** Detect free variable `global` from Node.js. */
-const freeGlobal = typeof global === 'object' && global && global.Object === Object && global;
-/** Detect free variable `self`. */
-const freeSelf = typeof self === 'object' && self && self.Object === Object && self;
-/** Used as a reference to the global object. */
-const root = freeGlobal || freeSelf || Function('return this')();
-/** Detect free variable `exports`. */
-const freeExports = typeof exports === 'object' && exports && !exports.nodeType && exports;
-/** Detect free variable `module`. */
-const freeModule = freeExports && typeof module === 'object' && module && !module.nodeType && module;
-
-let toReq = 'whatwg-fetch';
-if (freeModule) {
-  toReq = 'node-fetch';
-}
-const realFetch = require(toReq);
-
-function newFetch(url, options) {
-  if (/^\/\//.test(url)) {
-    url = `https:${url}`;
-  }
-  return realFetch.call(root, url, options);
-}
-
-if (freeModule) {
-  // Export for Node.js.
-  if (!root.fetch) {
-    root.fetch = newFetch;
-    root.Response = realFetch.Response;
-    root.Headers = realFetch.Headers;
-    root.Request = realFetch.Request;
-  }
-}
-root.fetch.bind(root);
 
 if (!has(Object, 'assign')) {
   Object.assign = assign;
@@ -150,12 +114,15 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
  *
  */
 function _request(isFormData, method, url, body = {}, headers = {}, others = {}) {
+  console.log('REQUEST', fetch, Headers);
   const defaultHeaders = {
     Accept: 'application/json',
   };
+
   if (!isFormData) {
     defaultHeaders['Content-Type'] = 'application/json';
   }
+
   let newUrl = cloneDeep(url);
 
   const fetchData = {
@@ -175,7 +142,7 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
   const reqst = new Request(newUrl, Object.assign({}, others, fetchData));
 
   return new Promise((resolve, reject) => {
-    root.fetch(reqst)
+    fetch(reqst)
       .then((response) => {
         if (response.ok) {
           response.text()

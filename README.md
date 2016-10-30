@@ -3,6 +3,18 @@
 
  [![npm version](https://badge.fury.io/js/fetchum.svg)](https://badge.fury.io/js/fetchum)
 
+## Install
+
+```
+npm i -S fetchum isomorphic-fetch
+```
+
+Run `isomorphic-fetch` polyfill at start of application
+
+```
+import 'isomorphic-fetch';
+```
+
 ## Setup
 
 ```
