@@ -94,11 +94,11 @@ userApi.fetchOne({ id: 0 })
   });
 ```
 
-__Returned Structor__
+__Returned Requests__
+
 - `fetchAll` - `GET` to base url
 - `create` - `POST` to base url
 - `fetchOne` - `GET` to base url and added id Var ie: `/users/:id`
-- `fetchAll` - `GET` to base url and added id Var ie: `/users/:id`
 - `update` - `PUT` to base url and added id Var ie: `/users/:id`
 - `delete` - `DELETE` to base url and added id Var ie: `/users/:id`
 
