@@ -20,7 +20,16 @@ function getStore() {
  * Return the storage prefix
  *
  */
-export const getPrefix = () => (!isUndefined(window, PRE_VAR) ? window[PRE_VAR] : '');
+export const getPrefix = () => {
+  let prefix = '';
+  if (!isUndefined(process) && !isUndefined(process.env) && !isUndefined(process.env[PRE_VAR])) {
+    prefix = process.env[PRE_VAR];
+  }
+  if (prefix === '' && !isUndefined(window) && !isUndefined(window, PRE_VAR)) {
+    prefix = window[PRE_VAR];
+  }
+  return prefix;
+};
 
 /**
  * Gets an item from localStorage
@@ -50,7 +59,7 @@ export const set = (id, value) => {
  * @param  {String} id
  *
  */
-export const remove = (id) => (getStore().removeItem(`${getPrefix()}-${id}`));
+export const remove = id => (getStore().removeItem(`${getPrefix()}-${id}`));
 
 /**
  * Gets an token from localStorage
@@ -63,7 +72,7 @@ export const getToken = () => (get('token'));
  * @param  {Any} value
  *
  */
-export const setToken = (value) => (set('token', value));
+export const setToken = value => (set('token', value));
 
 /**
  * Remove item from localStorage
@@ -87,7 +96,7 @@ export const getHydratedState = () => {
  * @param  {Object} state
  *
  */
-export const setHydratedState = (state) => (set('state', state));
+export const setHydratedState = state => (set('state', state));
 
 /**
  * Adds a key to hydrated state
@@ -103,4 +112,4 @@ export const addHydratedState = (id, value) => {
  * @param  {string} id
  *
  */
-export const isSet = (id) => (get(id) !== null);
+export const isSet = id => (get(id) !== null);

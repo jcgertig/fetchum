@@ -12,6 +12,23 @@
 </script>
 ```
 
+For use Node side set `env` vars ie:
+
+```
+process.env.API_BASE = 'localhost:3000/api';
+process.env.STORAGE_PREFIX = '@my-app';
+```
+
+For universal set both.
+
+In this example webpack var replace for env vars is used.
+```
+if (typeof window === 'undefined') {
+  window.API_BASE = process.env.API_BASE || '/api/';
+  window.STORAGE_PREFIX = process.env.STORAGE_PREFIX || '@app-prefix';
+}
+```
+
 ### Api - `generateRequest`
 
 `generateRequest` returns a function to call that will make a request
@@ -80,7 +97,9 @@ Like `generateRequest` `generateCRUDRequests` will generate request structure bu
 __Function Params__
  - `baseUrl` : url string to base crud actions off ie: `/user`
  - `idVar` : the var name of the `id` url param id the `:id` in `/user/:id`. The `:` should not be passed.
+  - __Defualt__ - `'id'`
  - `useToken` : if the routes should have the token option set.
+  - __Defualt__ - `false`
 
 __Examples__
 ```
