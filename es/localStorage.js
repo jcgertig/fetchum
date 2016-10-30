@@ -2,7 +2,7 @@
 /**
  * LocalStorage Wrapper
  */
-import { isUndefined, has, assign } from 'lodash';
+import { isUndefined, has, assign } from 'lodash-es';
 
 if (!has(Object, 'assign')) {
   Object.assign = assign;

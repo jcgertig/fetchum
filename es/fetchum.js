@@ -1,7 +1,7 @@
 var _this = this;
 
 /* global FormData, fetch, Headers, Request, window, File, Blob, self */
-import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash';
+import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash-es';
 import { getToken } from './localStorage';
 
 /**

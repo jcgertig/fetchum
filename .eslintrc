@@ -1,7 +1,6 @@
 {
   "extends": "eslint-config-airbnb",
   "env": {
-    "mocha": true,
     "node": true
   },
   "globals": {
