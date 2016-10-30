@@ -1,6 +1,3 @@
-import * as fetchum from './fetchum';
-import * as storage from './localStorage';
-
+export * from './fetchum';
+export * from './storage';
 export const LocalStorage = storage;
-
-export default { ...fetchum, ...storage, LocalStorage };
