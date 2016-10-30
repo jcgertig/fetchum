@@ -114,7 +114,7 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
  *
  */
 function _request(isFormData, method, url, body = {}, headers = {}, others = {}) {
-  console.log('REQUEST', fetch, Headers);
+  console.error('REQUEST', fetch, Headers);
   const defaultHeaders = {
     Accept: 'application/json',
   };
