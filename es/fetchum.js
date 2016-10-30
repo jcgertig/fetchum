@@ -142,7 +142,7 @@ function _request(isFormData, method, url) {
   var headers = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
   var others = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
-  console.log('REQUEST', fetch, Headers);
+  console.error('REQUEST', fetch, Headers);
   var defaultHeaders = {
     Accept: 'application/json'
   };
