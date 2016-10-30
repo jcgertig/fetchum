@@ -117,7 +117,6 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
  *
  */
 function _request(isFormData, method, url, body = {}, headers = {}, others = {}) {
-  console.log('hit request');
   const defaultHeaders = {
     Accept: 'application/json',
   };
@@ -141,8 +140,6 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
       newUrl += `?${params.join('&')}`;
     }
   }
-
-  console.log('hit request', newUrl, method);
 
   const reqst = new Request(newUrl, Object.assign({}, others, fetchData));
 
@@ -180,7 +177,6 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
  *
  */
 function _apiRequest(form, method, route, body, headers, others) {
-  console.log('hit api');
   return _request(form, method, `${_getBase()}${route}`, body, headers, others);
 }
 
@@ -192,7 +188,6 @@ function _apiRequest(form, method, route, body, headers, others) {
  *
  */
 function _callRequest({ method, route, form, external, others }, body, headers) {
-  console.log('hit call');
   if (external) {
     return _request(form, method, route, body, headers, others);
   }
@@ -223,7 +218,6 @@ function _parameterizeRoute(route, params) {
  *
  */
 function _publicRequest(options, params, body = {}, headers = {}) {
-  console.log('hit public');
   const cloned = cloneDeep(options);
   if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
   return _callRequest(cloned, body, headers);
