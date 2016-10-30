@@ -222,6 +222,15 @@ const getUsersDirect = () => {
 generateRequest
 
 /**
+ * Generate a crud api requests
+ * @param  {Object} baseUrl
+ * @param  {Object} idVar
+ * @param  {Object} useToken
+ *
+ */
+generateCRUDRequests
+
+/**
  * Base request call
  * @param  {Boolean} isFormData
  * @param  {String} method

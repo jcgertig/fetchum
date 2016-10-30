@@ -257,8 +257,10 @@ export const generateRequest = (options) => {
 };
 
 /**
- * Generate a api request
- * @param  {Object} options - {method, token, route, external, form }
+ * Generate a crud api requests
+ * @param  {Object} baseUrl
+ * @param  {Object} idVar
+ * @param  {Object} useToken
  *
  */
 export const generateCRUDRequests = (baseUrl = '', idVar = '', token = false) => (
