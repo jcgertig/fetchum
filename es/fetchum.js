@@ -1,13 +1,14 @@
 var _this = this;
 
 /* global FormData, fetch, Headers, Request, window, File, Blob, self */
-import { forEach, cloneDeep, isArray, isObject, toLower, isUndefined, has, assign } from 'lodash-es';
+import { forEach, cloneDeep, isArray, isObject, isString, toLower, isUndefined, has, assign } from 'lodash-es';
 import { getToken } from './localStorage';
 
 /**
  * Fetchum - Better Fetch
  */
 require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 if (!has(Object, 'assign')) {
   Object.assign = assign;
@@ -81,6 +82,9 @@ function _transformBody() {
   var isFormData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
   if (!isFormData) {
+    if (isString(body)) {
+      return body;
+    }
     return JSON.stringify(body);
   }
   return _transformFormBody(body, new FormData());
@@ -205,7 +209,13 @@ function _request(isFormData, method, url) {
  *
  */
 function _apiRequest(form, method, route, body, headers, others) {
-  return _request(form, method, '' + _getBase() + route, body, headers, others);
+  var base = _getBase();
+  if (base === '') {
+    return new Promise(function (done, reject) {
+      return reject('No base url set fullpath needed for node side requests.');
+    });
+  }
+  return _request(form, method, '' + base + route, body, headers, others);
 }
 
 /**

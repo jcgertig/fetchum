@@ -1,6 +1,6 @@
 {
   "name": "fetchum",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "A better fetch and local storage system",
   "browser": "dist/fetchum.js",
   "main": "lib/index.js",
@@ -38,9 +38,6 @@
     "token"
   ],
   "author": "Jonathan Gertig <jcgertig@gmail.com>",
-  "peerDependencies": {
-    "isomorphic-fetch": "^2.2.1"
-  },
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.3.15",
@@ -71,18 +68,17 @@
     "babel-plugin-transform-object-rest-spread": "^6.3.13",
     "babel-register": "^6.3.13",
     "check-es3-syntax-cli": "^0.1.1",
-    "cross-env": "^1.0.7",
+    "cross-env": "^3.1.3",
     "eslint": "^1.10.3",
     "eslint-config-rackt": "^1.1.1",
-    "eslint-plugin-react": "^3.16.1",
-    "glob": "^6.0.4",
     "json-loader": "^0.5.4",
     "rimraf": "^2.3.4",
     "webpack": "^1.9.6"
   },
   "dependencies": {
     "es6-promise": "^4.0.5",
-    "lodash": "^4.16.4",
-    "node-localstorage": "^1.3.0"
+    "lodash": "^4.17.2",
+    "node-localstorage": "^1.3.0",
+    "isomorphic-fetch": "^2.2.1"
   }
 }
