@@ -5,19 +5,13 @@
 
 ## Install
 
-```
-npm i -S fetchum isomorphic-fetch
-```
-
-Run `isomorphic-fetch` polyfill at start of application
-
-```
-import 'isomorphic-fetch';
+```bash
+npm i -S fetchum
 ```
 
 ## Setup
 
-```
+```javascript
 <script>
   window.API_BASE = 'localhost:3000/api';
   window.STORAGE_PREFIX = '@my-app';
@@ -26,7 +20,7 @@ import 'isomorphic-fetch';
 
 For use Node side set `env` vars ie:
 
-```
+```javascript
 process.env.API_BASE = 'localhost:3000/api';
 process.env.STORAGE_PREFIX = '@my-app';
 ```
@@ -34,7 +28,8 @@ process.env.STORAGE_PREFIX = '@my-app';
 For universal set both.
 
 In this example webpack var replace for env vars is used.
-```
+
+```javascript
 if (typeof window === 'undefined') {
   window.API_BASE = process.env.API_BASE || '/api/';
   window.STORAGE_PREFIX = process.env.STORAGE_PREFIX || '@app-prefix';
@@ -49,6 +44,7 @@ based on set options.
 __Options__
  - `method` : http verb
  - `route` : url string
+ - `headers` : object for default request headers (default: {})
  - `form` : boolean if submit as form data (default: false)
  - `token` : boolean if set Auth header from local storage token (default: false)
  - `external` : boolean if should not prepend route with api base (default: false)
@@ -61,7 +57,8 @@ __Function Params__
  - `tokenType` : !Only if external option is `false`. Default `Bearer`.
 
 __Examples__
-```
+
+```javascript
 import {generateRequest} from 'fetchum';
 
 const getRandomUser = generateRequest({
@@ -72,7 +69,7 @@ const getRandomUser = generateRequest({
 ```
 
 Create and update a user with profile image on a authenticated api
-```
+```javascript
 import {generateRequest} from 'fetchum';
 
 const postUser = generateRequest({
@@ -114,7 +111,7 @@ __Function Params__
   - __Defualt__ - `false`
 
 __Examples__
-```
+```javascript
 import {generateCRUDRequests} from 'fetchum';
 
 const userApi = generateCRUDRequests('/users', 'id', true);
@@ -151,7 +148,7 @@ __Methods__
 - `removeToken` - removes a token from storage
 
 __Examples__
-```
+```javascript
 import {LocalStorage} from 'fetchum';
 
 const setToken = (token) => {
@@ -160,7 +157,7 @@ const setToken = (token) => {
 ```
 
 Login and out example
-```
+```javascript
 import {LocalStorage, generateRequest} from 'fetchum';
 
 const apiLogin = generateRequest({
@@ -188,7 +185,7 @@ const logout = () => {
 ```
 
 ### Random Usage Examples
-```
+```javascript
 import {generateRequest} from 'fetchum';
 
 /**
@@ -232,7 +229,7 @@ export default {
 ```
 
 
-```
+```javascript
 import fetchum from 'fetchum';
 
 const getUsersDirect = () => {
@@ -244,10 +241,10 @@ const getUsersDirect = () => {
 
 ## Api request - methods
 
-```
+```javascript
 /**
  * Generate a api request
- * @param  {Object} options - {method, token, route, external, form }
+ * @param  {Object} options - {method, token, route, external, form, headers}
  *
  */
 generateRequest

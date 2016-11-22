@@ -2,18 +2,18 @@
 /**
  * LocalStorage Wrapper
  */
-import { isUndefined, has, assign } from 'lodash';
+import { isUndefined, has, assign } from 'lodash'
 
 if (!has(Object, 'assign')) {
-  Object.assign = assign;
+  Object.assign = assign
 }
 
-const PRE_VAR = 'STORAGE_PREFIX';
+const PRE_VAR = 'STORAGE_PREFIX'
 function getStore() {
   if (typeof process === 'object' && `${process}` === '[object process]') {
-    return require('node-localstorage').LocalStorage;
+    return require('node-localstorage').LocalStorage
   }
-  return window.localStorage;
+  return window.localStorage
 }
 
 /**
@@ -21,15 +21,15 @@ function getStore() {
  *
  */
 export const getPrefix = () => {
-  let prefix = '';
+  let prefix = ''
   if (!isUndefined(process) && !isUndefined(process.env) && !isUndefined(process.env[PRE_VAR])) {
-    prefix = process.env[PRE_VAR];
+    prefix = process.env[PRE_VAR]
   }
   if (prefix === '' && !isUndefined(window) && !isUndefined(window, PRE_VAR)) {
-    prefix = window[PRE_VAR];
+    prefix = window[PRE_VAR]
   }
-  return prefix;
-};
+  return prefix
+}
 
 /**
  * Gets an item from localStorage
@@ -38,11 +38,11 @@ export const getPrefix = () => {
  */
 export const get = (id) => {
   try {
-    return JSON.parse(getStore().getItem(`${getPrefix()}-${id}`)).value;
+    return JSON.parse(getStore().getItem(`${getPrefix()}-${id}`)).value
   } catch (err) {
-    return null;
+    return null
   }
-};
+}
 
 /**
  * Sets an item in localStorage
@@ -51,35 +51,35 @@ export const get = (id) => {
  *
  */
 export const set = (id, value) => {
-  return getStore().setItem(`${getPrefix()}-${id}`, JSON.stringify({ value }));
-};
+  return getStore().setItem(`${getPrefix()}-${id}`, JSON.stringify({ value }))
+}
 
 /**
  * Remove item from localStorage
  * @param  {String} id
  *
  */
-export const remove = id => (getStore().removeItem(`${getPrefix()}-${id}`));
+export const remove = id => (getStore().removeItem(`${getPrefix()}-${id}`))
 
 /**
  * Gets an token from localStorage
  *
  */
-export const getToken = () => (get('token'));
+export const getToken = () => (get('token'))
 
 /**
  * Sets the token in localStorage
  * @param  {Any} value
  *
  */
-export const setToken = value => (set('token', value));
+export const setToken = value => (set('token', value))
 
 /**
  * Remove item from localStorage
  * @param  {String} id
  *
  */
-export const removeToken = () => (remove('token'));
+export const removeToken = () => (remove('token'))
 
 /**
  * Return state to rehydrate store
@@ -87,16 +87,16 @@ export const removeToken = () => (remove('token'));
  *
  */
 export const getHydratedState = () => {
-  const state = get('state');
-  return state || {};
-};
+  const state = get('state')
+  return state || {}
+}
 
 /**
  * Sets the hydrated state
  * @param  {Object} state
  *
  */
-export const setHydratedState = state => (set('state', state));
+export const setHydratedState = state => (set('state', state))
 
 /**
  * Adds a key to hydrated state
@@ -104,12 +104,12 @@ export const setHydratedState = state => (set('state', state));
  * @param  {Any}  value
  */
 export const addHydratedState = (id, value) => {
-  return set('state', Object.assign({}, getHydratedState(), { id: value }));
-};
+  return set('state', Object.assign({}, getHydratedState(), { id: value }))
+}
 
 /**
  * Checks if an item exists
  * @param  {string} id
  *
  */
-export const isSet = id => (get(id) !== null);
+export const isSet = id => (get(id) !== null)

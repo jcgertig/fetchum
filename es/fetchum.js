@@ -220,18 +220,19 @@ function _apiRequest(form, method, route, body, headers, others) {
 
 /**
  * Calls the request and prepends route with base
- * @param  {Object} options = {method, route, form, external}
+ * @param  {Object} options = {method, route, form, external, headers}
  * @param  {Object} body
  * @param  {Object} headers
  *
  */
-function _callRequest(_ref2, body, headers) {
-  var method = _ref2.method,
-      route = _ref2.route,
-      form = _ref2.form,
-      external = _ref2.external,
-      others = _ref2.others;
+function _callRequest(options, body, _headers) {
+  var method = options.method,
+      route = options.route,
+      form = options.form,
+      external = options.external,
+      others = options.others;
 
+  var headers = Object.assign({}, options.headers, _headers);
   if (external) {
     return _request(form, method, route, body, headers, others);
   }
@@ -257,7 +258,7 @@ function _parameterizeRoute(route, params) {
 
 /**
  * Call a api request without a token header
- * @param  {Object} options - {method, token, route, external, form}
+ * @param  {Object} options - {method, token, route, external, form, headers}
  * @param  {Object} params
  * @param  {Object} body
  * @param  {Object} headers
@@ -276,7 +277,7 @@ function _publicRequest(options, params) {
 
 /**
  * Call a api request and set Auth header
- * @param  {Object} options - {method, token, route, external, form}
+ * @param  {Object} options - {method, token, route, external, form, headers}
  * @param  {Object} params
  * @param  {Object} body
  * @param  {Object} headers
@@ -301,7 +302,7 @@ function _requestWithToken(options, params) {
 
 /**
  * Generate a api request
- * @param  {Object} options - {method, token, route, external, form }
+ * @param  {Object} options - {method, token, route, external, form, headers}
  *
  */
 export var generateRequest = function generateRequest(options) {
@@ -309,6 +310,7 @@ export var generateRequest = function generateRequest(options) {
   clone.token = clone.token || false;
   clone.form = clone.form || false;
   clone.external = clone.external || false;
+  clone.headers = clone.headers || {};
   if (clone.external) {
     return _publicRequest.bind(_this, clone);
   }

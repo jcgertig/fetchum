@@ -1,4 +1,4 @@
-import * as storage from './localStorage';
+import * as storage from './localStorage'
 
-export * from './fetchum';
-export const LocalStorage = storage;
+export * from './fetchum'
+export const LocalStorage = storage

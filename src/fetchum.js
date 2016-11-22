@@ -1,15 +1,15 @@
 /* global FormData, fetch, Headers, Request, window, File, Blob, self */
-import { forEach, cloneDeep, isArray, isObject, isString, toLower, isUndefined, has, assign } from 'lodash';
-import { getToken } from './localStorage';
+import { forEach, cloneDeep, isArray, isObject, isString, toLower, isUndefined, has, assign } from 'lodash'
+import { getToken } from './localStorage'
 
 /**
  * Fetchum - Better Fetch
  */
-require('es6-promise').polyfill();
-require('isomorphic-fetch');
+require('es6-promise').polyfill()
+require('isomorphic-fetch')
 
 if (!has(Object, 'assign')) {
-  Object.assign = assign;
+  Object.assign = assign
 }
 
 /**
@@ -17,17 +17,17 @@ if (!has(Object, 'assign')) {
  *
  */
 function _getBase() {
-  let base = '';
+  let base = ''
   if (typeof process === 'object' && `${process}` === '[object process]') {
     if (!isUndefined(process.env) && !isUndefined(process.env.API_BASE)) {
-      base = process.env.API_BASE;
+      base = process.env.API_BASE
     }
-    return base;
+    return base
   }
   if (!isUndefined(window.API_BASE)) {
-    base = window.API_BASE;
+    base = window.API_BASE
   }
-  return base;
+  return base
 }
 
 /**
@@ -36,7 +36,7 @@ function _getBase() {
  *
  */
 function _isFile(val) {
-  return (val instanceof File || val instanceof Blob);
+  return (val instanceof File || val instanceof Blob)
 }
 
 /**
@@ -47,26 +47,26 @@ function _isFile(val) {
  *
  */
 function _transformFormBody(body, formData, originalKey) {
-  let data = formData;
+  let data = formData
   forEach(Object.keys(body), (paramKey) => {
-    const obj = body[paramKey];
-    const key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
+    const obj = body[paramKey]
+    const key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey
     if (isArray(obj)) {
       for (let index = 0; index < obj.length; index++) {
-        const val = obj[index];
+        const val = obj[index]
         if ((isObject(val) && !_isFile(val)) || isArray(val)) {
-          data = _transformFormBody(val, data, `${key}[${index}]`);
+          data = _transformFormBody(val, data, `${key}[${index}]`)
         } else {
-          data.append(`${key}[${index}]`, val);
+          data.append(`${key}[${index}]`, val)
         }
       }
     } else if (isObject(obj) && !_isFile(obj)) {
-      data = _transformFormBody(obj, data, key);
+      data = _transformFormBody(obj, data, key)
     } else {
-      data.append(key, obj);
+      data.append(key, obj)
     }
-  });
-  return data;
+  })
+  return data
 }
 
 /**
@@ -77,10 +77,10 @@ function _transformFormBody(body, formData, originalKey) {
  */
 function _transformBody(body = {}, isFormData = false) {
   if (!isFormData) {
-    if (isString(body)) { return body; }
-    return JSON.stringify(body);
+    if (isString(body)) { return body }
+    return JSON.stringify(body)
   }
-  return _transformFormBody(body, new FormData());
+  return _transformFormBody(body, new FormData())
 }
 
 /**
@@ -89,26 +89,26 @@ function _transformBody(body = {}, isFormData = false) {
  *
  */
 function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
-  let data = formatedParams;
+  let data = formatedParams
   for (const paramKey of Object.keys(params)) {
-    const obj = params[paramKey];
-    const key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey;
+    const obj = params[paramKey]
+    const key = !isUndefined(originalKey) ? `${originalKey}[${paramKey}]` : paramKey
     if (isArray(obj)) {
       for (let index = 0; index < obj.length; index++) {
-        const val = obj[index];
+        const val = obj[index]
         if (isObject(val) || isArray(val)) {
-          data = _transformUrlParams(val, data, `${key}[${index}]`);
+          data = _transformUrlParams(val, data, `${key}[${index}]`)
         } else {
-          data.push(`${key}[${index}]=${encodeURIComponent(val)}`);
+          data.push(`${key}[${index}]=${encodeURIComponent(val)}`)
         }
       }
     } else if (isObject(obj)) {
-      data = _transformUrlParams(obj, data, key);
+      data = _transformUrlParams(obj, data, key)
     } else {
-      data.push(`${key}=${encodeURIComponent(obj)}`);
+      data.push(`${key}=${encodeURIComponent(obj)}`)
     }
   }
-  return data;
+  return data
 }
 
 /**
@@ -122,30 +122,30 @@ function _transformUrlParams(params = {}, formatedParams = [], originalKey) {
  */
 function _request(isFormData, method, url, body = {}, headers = {}, others = {}) {
   const defaultHeaders = {
-    Accept: 'application/json',
-  };
-
-  if (!isFormData) {
-    defaultHeaders['Content-Type'] = 'application/json';
+    Accept: 'application/json'
   }
 
-  let newUrl = cloneDeep(url);
+  if (!isFormData) {
+    defaultHeaders['Content-Type'] = 'application/json'
+  }
+
+  let newUrl = cloneDeep(url)
 
   const fetchData = {
     method: toLower(method),
-    headers: new Headers(Object.assign({}, defaultHeaders, headers)),
-  };
+    headers: new Headers(Object.assign({}, defaultHeaders, headers))
+  }
 
   if (toLower(method) !== 'get') {
-    fetchData.body = _transformBody(body, isFormData);
+    fetchData.body = _transformBody(body, isFormData)
   } else {
-    const params = _transformUrlParams(body);
+    const params = _transformUrlParams(body)
     if (params.length > 0) {
-      newUrl += `?${params.join('&')}`;
+      newUrl += `?${params.join('&')}`
     }
   }
 
-  const reqst = new Request(newUrl, Object.assign({}, others, fetchData));
+  const reqst = new Request(newUrl, Object.assign({}, others, fetchData))
 
   return new Promise((resolve, reject) => {
     fetch(reqst)
@@ -153,22 +153,22 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
         if (response.ok) {
           response.text()
             .then((data) => {
-              let json = null;
+              let json = null
               try {
-                json = JSON.parse(data);
+                json = JSON.parse(data)
               } catch (e) {
                 // test parsing json
               }
-              response.data = (json !== null ? json : data);
-              return resolve(response);
+              response.data = (json !== null ? json : data)
+              return resolve(response)
             })
-            .catch(() => reject(response));
+            .catch(() => reject(response))
         } else {
-          reject(response);
+          reject(response)
         }
       })
-      .catch(response => reject(response));
-  });
+      .catch(response => reject(response))
+  })
 }
 
 /**
@@ -181,25 +181,27 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
  *
  */
 function _apiRequest(form, method, route, body, headers, others) {
-  const base = _getBase();
+  const base = _getBase()
   if (base === '') {
-    return new Promise((done, reject) => reject('No base url set fullpath needed for node side requests.'));
+    return new Promise((done, reject) => reject('No base url set fullpath needed for node side requests.'))
   }
-  return _request(form, method, `${base}${route}`, body, headers, others);
+  return _request(form, method, `${base}${route}`, body, headers, others)
 }
 
 /**
  * Calls the request and prepends route with base
- * @param  {Object} options = {method, route, form, external}
+ * @param  {Object} options = {method, route, form, external, headers}
  * @param  {Object} body
  * @param  {Object} headers
  *
  */
-function _callRequest({ method, route, form, external, others }, body, headers) {
+function _callRequest(options, body, _headers) {
+  const { method, route, form, external, others } = options
+  const headers = Object.assign({}, options.headers, _headers)
   if (external) {
-    return _request(form, method, route, body, headers, others);
+    return _request(form, method, route, body, headers, others)
   }
-  return _apiRequest(form, method, route, body, headers, others);
+  return _apiRequest(form, method, route, body, headers, others)
 }
 
 /**
@@ -209,31 +211,31 @@ function _callRequest({ method, route, form, external, others }, body, headers) 
  *
  */
 function _parameterizeRoute(route, params) {
-  let parameterized = cloneDeep(route);
+  let parameterized = cloneDeep(route)
   forEach(params, (val, key) => {
-    if (isUndefined(val)) { console.warn(`error: parameter ${key} was ${val}`); }
-    parameterized = parameterized.replace(`:${key}`, val);
-  });
-  return parameterized;
+    if (isUndefined(val)) { console.warn(`error: parameter ${key} was ${val}`) }
+    parameterized = parameterized.replace(`:${key}`, val)
+  })
+  return parameterized
 }
 
 /**
  * Call a api request without a token header
- * @param  {Object} options - {method, token, route, external, form}
+ * @param  {Object} options - {method, token, route, external, form, headers}
  * @param  {Object} params
  * @param  {Object} body
  * @param  {Object} headers
  *
  */
 function _publicRequest(options, params, body = {}, headers = {}) {
-  const cloned = cloneDeep(options);
-  if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
-  return _callRequest(cloned, body, headers);
+  const cloned = cloneDeep(options)
+  if (params) { cloned.route = _parameterizeRoute(cloned.route, params) }
+  return _callRequest(cloned, body, headers)
 }
 
 /**
  * Call a api request and set Auth header
- * @param  {Object} options - {method, token, route, external, form}
+ * @param  {Object} options - {method, token, route, external, form, headers}
  * @param  {Object} params
  * @param  {Object} body
  * @param  {Object} headers
@@ -241,32 +243,33 @@ function _publicRequest(options, params, body = {}, headers = {}) {
  *
  */
 function _requestWithToken(options, params, body = {}, headers = {}, customToken = null, tokenType = 'Bearer') {
-  const cloned = cloneDeep(options);
-  if (params) { cloned.route = _parameterizeRoute(cloned.route, params); }
+  const cloned = cloneDeep(options)
+  if (params) { cloned.route = _parameterizeRoute(cloned.route, params) }
   const requestHeaders = Object.assign({}, headers, {
-    Authorization: `${tokenType} ${customToken !== null ? customToken : getToken()}`,
-  });
-  return _callRequest(cloned, body, requestHeaders);
+    Authorization: `${tokenType} ${customToken !== null ? customToken : getToken()}`
+  })
+  return _callRequest(cloned, body, requestHeaders)
 }
 
 /**
  * Generate a api request
- * @param  {Object} options - {method, token, route, external, form }
+ * @param  {Object} options - {method, token, route, external, form, headers}
  *
  */
 export const generateRequest = (options) => {
-  const clone = cloneDeep(options);
-  clone.token = clone.token || false;
-  clone.form = clone.form || false;
-  clone.external = clone.external || false;
-  if (clone.external) { return _publicRequest.bind(this, clone); }
+  const clone = cloneDeep(options)
+  clone.token = clone.token || false
+  clone.form = clone.form || false
+  clone.external = clone.external || false
+  clone.headers = clone.headers || {}
+  if (clone.external) { return _publicRequest.bind(this, clone) }
 
   return clone.token ? (
     _requestWithToken.bind(this, clone)
   ) : (
     _publicRequest.bind(this, clone)
-  );
-};
+  )
+}
 
 /**
  * Generate a crud api requests
@@ -280,50 +283,50 @@ export const generateCRUDRequests = (baseUrl = '', idVar = 'id', token = false) 
     fetchAll: generateRequest({
       token,
       method: 'GET',
-      route: baseUrl,
+      route: baseUrl
     }),
     create: generateRequest({
       token,
       method: 'POST',
-      route: baseUrl,
+      route: baseUrl
     }),
     fetchOne: generateRequest({
       token,
       method: 'GET',
-      route: `${baseUrl}/:${idVar}`,
+      route: `${baseUrl}/:${idVar}`
     }),
     update: generateRequest({
       token,
       method: 'PUT',
-      route: `${baseUrl}/:${idVar}`,
+      route: `${baseUrl}/:${idVar}`
     }),
     delete: generateRequest({
       token,
       method: 'DELETE',
-      route: `${baseUrl}/:${idVar}`,
-    }),
+      route: `${baseUrl}/:${idVar}`
+    })
   }
-);
+)
 
 
-export const request = _request;
+export const request = _request
 
-export const getReq = request.bind(null, false, 'get');
-export const putReq = request.bind(null, false, 'put');
-export const postReq = request.bind(null, false, 'post');
-export const patchReq = request.bind(null, false, 'patch');
-export const deleteReq = request.bind(null, false, 'delete');
+export const getReq = request.bind(null, false, 'get')
+export const putReq = request.bind(null, false, 'put')
+export const postReq = request.bind(null, false, 'post')
+export const patchReq = request.bind(null, false, 'patch')
+export const deleteReq = request.bind(null, false, 'delete')
 
-export const putFormReq = request.bind(null, true, 'put');
-export const postFormReq = request.bind(null, true, 'post');
+export const putFormReq = request.bind(null, true, 'put')
+export const postFormReq = request.bind(null, true, 'post')
 
-export const apiRequest = _apiRequest;
+export const apiRequest = _apiRequest
 
-export const apiGetReq = apiRequest.bind(null, false, 'get');
-export const apiPutReq = apiRequest.bind(null, false, 'put');
-export const apiPostReq = apiRequest.bind(null, false, 'post');
-export const apiPatchReq = apiRequest.bind(null, false, 'patch');
-export const apiDeleteReq = apiRequest.bind(null, false, 'delete');
+export const apiGetReq = apiRequest.bind(null, false, 'get')
+export const apiPutReq = apiRequest.bind(null, false, 'put')
+export const apiPostReq = apiRequest.bind(null, false, 'post')
+export const apiPatchReq = apiRequest.bind(null, false, 'patch')
+export const apiDeleteReq = apiRequest.bind(null, false, 'delete')
 
-export const apiPutFormReq = apiRequest.bind(null, true, 'put');
-export const apiPostFormReq = apiRequest.bind(null, true, 'post');
+export const apiPutFormReq = apiRequest.bind(null, true, 'put')
+export const apiPostFormReq = apiRequest.bind(null, true, 'post')
