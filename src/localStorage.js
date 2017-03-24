@@ -113,3 +113,10 @@ export const addHydratedState = (id, value) => {
  *
  */
 export const isSet = id => (get(id) !== null)
+
+/**
+ * Checks if has token
+ * @param  {Any} value
+ *
+ */
+export const hasToken = () => isSet('token')

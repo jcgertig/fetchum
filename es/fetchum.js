@@ -177,24 +177,34 @@ function _request(isFormData, method, url) {
 
   return new Promise(function (resolve, reject) {
     fetch(reqst).then(function (response) {
-      if (response.ok) {
-        response.text().then(function (data) {
-          var json = null;
-          try {
-            json = JSON.parse(data);
-          } catch (e) {
-            // test parsing json
-          }
-          response.data = json !== null ? json : data;
+      response.text().then(function (data) {
+        var json = null;
+        try {
+          json = JSON.parse(data);
+        } catch (e) {
+          // test parsing json
+        }
+        response.data = json !== null ? json : data;
+        if (response.ok) {
           return resolve(response);
-        })['catch'](function () {
-          return reject(response);
-        });
-      } else {
+        }
         reject(response);
-      }
+      })['catch'](function () {
+        response.data = null;return reject(response);
+      });
     })['catch'](function (response) {
-      return reject(response);
+      response.text().then(function (data) {
+        var json = null;
+        try {
+          json = JSON.parse(data);
+        } catch (e) {
+          // test parsing json
+        }
+        response.data = json !== null ? json : data;
+        return reject(response);
+      })['catch'](function () {
+        response.data = null;return reject(response);
+      });
     });
   });
 }
@@ -311,9 +321,6 @@ export var generateRequest = function generateRequest(options) {
   clone.form = clone.form || false;
   clone.external = clone.external || false;
   clone.headers = clone.headers || {};
-  if (clone.external) {
-    return _publicRequest.bind(_this, clone);
-  }
 
   return clone.token ? _requestWithToken.bind(_this, clone) : _publicRequest.bind(_this, clone);
 };

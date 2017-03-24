@@ -1,6 +1,6 @@
 {
   "name": "fetchum",
-  "version": "3.1.0",
+  "version": "3.3.0",
   "description": "A better fetch and local storage system",
   "browser": "dist/fetchum.js",
   "main": "lib/index.js",

@@ -150,24 +150,36 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
   return new Promise((resolve, reject) => {
     fetch(reqst)
       .then((response) => {
-        if (response.ok) {
-          response.text()
-            .then((data) => {
-              let json = null
-              try {
-                json = JSON.parse(data)
-              } catch (e) {
-                // test parsing json
-              }
-              response.data = (json !== null ? json : data)
+        response.text()
+          .then((data) => {
+            let json = null
+            try {
+              json = JSON.parse(data)
+            } catch (e) {
+              // test parsing json
+            }
+            response.data = (json !== null ? json : data)
+            if (response.ok) {
               return resolve(response)
-            })
-            .catch(() => reject(response))
-        } else {
-          reject(response)
-        }
+            }
+            reject(response)
+          })
+          .catch(() => { response.data = null; return reject(response) })
       })
-      .catch(response => reject(response))
+      .catch((response) => {
+        response.text()
+          .then((data) => {
+            let json = null
+            try {
+              json = JSON.parse(data)
+            } catch (e) {
+              // test parsing json
+            }
+            response.data = (json !== null ? json : data)
+            return reject(response)
+          })
+          .catch(() => { response.data = null; return reject(response) })
+      })
   })
 }
 
@@ -262,7 +274,6 @@ export const generateRequest = (options) => {
   clone.form = clone.form || false
   clone.external = clone.external || false
   clone.headers = clone.headers || {}
-  if (clone.external) { return _publicRequest.bind(this, clone) }
 
   return clone.token ? (
     _requestWithToken.bind(this, clone)

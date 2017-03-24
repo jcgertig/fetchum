@@ -4040,7 +4040,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	exports.__esModule = true;
-	exports.isSet = exports.addHydratedState = exports.setHydratedState = exports.getHydratedState = exports.removeToken = exports.setToken = exports.getToken = exports.remove = exports.set = exports.get = exports.getPrefix = undefined;
+	exports.hasToken = exports.isSet = exports.addHydratedState = exports.setHydratedState = exports.getHydratedState = exports.removeToken = exports.setToken = exports.getToken = exports.remove = exports.set = exports.get = exports.getPrefix = undefined;
 
 	var _lodash = __webpack_require__(13);
 
@@ -4168,6 +4168,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var isSet = exports.isSet = function isSet(id) {
 	  return get(id) !== null;
+	};
+
+	/**
+	 * Checks if has token
+	 * @param  {Any} value
+	 *
+	 */
+	var hasToken = exports.hasToken = function hasToken() {
+	  return isSet('token');
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
@@ -23213,24 +23222,34 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return new Promise(function (resolve, reject) {
 	    fetch(reqst).then(function (response) {
-	      if (response.ok) {
-	        response.text().then(function (data) {
-	          var json = null;
-	          try {
-	            json = JSON.parse(data);
-	          } catch (e) {
-	            // test parsing json
-	          }
-	          response.data = json !== null ? json : data;
+	      response.text().then(function (data) {
+	        var json = null;
+	        try {
+	          json = JSON.parse(data);
+	        } catch (e) {
+	          // test parsing json
+	        }
+	        response.data = json !== null ? json : data;
+	        if (response.ok) {
 	          return resolve(response);
-	        })['catch'](function () {
-	          return reject(response);
-	        });
-	      } else {
+	        }
 	        reject(response);
-	      }
+	      })['catch'](function () {
+	        response.data = null;return reject(response);
+	      });
 	    })['catch'](function (response) {
-	      return reject(response);
+	      response.text().then(function (data) {
+	        var json = null;
+	        try {
+	          json = JSON.parse(data);
+	        } catch (e) {
+	          // test parsing json
+	        }
+	        response.data = json !== null ? json : data;
+	        return reject(response);
+	      })['catch'](function () {
+	        response.data = null;return reject(response);
+	      });
 	    });
 	  });
 	}
@@ -23347,9 +23366,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  clone.form = clone.form || false;
 	  clone.external = clone.external || false;
 	  clone.headers = clone.headers || {};
-	  if (clone.external) {
-	    return _publicRequest.bind(undefined, clone);
-	  }
 
 	  return clone.token ? _requestWithToken.bind(undefined, clone) : _publicRequest.bind(undefined, clone);
 	};

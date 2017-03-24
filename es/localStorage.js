@@ -125,3 +125,12 @@ export var addHydratedState = function addHydratedState(id, value) {
 export var isSet = function isSet(id) {
   return get(id) !== null;
 };
+
+/**
+ * Checks if has token
+ * @param  {Any} value
+ *
+ */
+export var hasToken = function hasToken() {
+  return isSet('token');
+};
