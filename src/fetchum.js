@@ -150,35 +150,43 @@ function _request(isFormData, method, url, body = {}, headers = {}, others = {})
   return new Promise((resolve, reject) => {
     fetch(reqst)
       .then((response) => {
-        response.text()
-          .then((data) => {
-            let json = null
-            try {
-              json = JSON.parse(data)
-            } catch (e) {
-              // test parsing json
-            }
-            response.data = (json !== null ? json : data)
-            if (response.ok) {
-              return resolve(response)
-            }
-            reject(response)
-          })
-          .catch(() => { response.data = null; return reject(response) })
+        try {
+          response.text()
+            .then((data) => {
+              let json = null
+              try {
+                json = JSON.parse(data)
+              } catch (e) {
+                // test parsing json
+              }
+              response.data = (json !== null ? json : data)
+              if (response.ok) {
+                return resolve(response)
+              }
+              reject(response)
+            })
+            .catch(() => { response.data = null; return reject(response) })
+        } catch (e) {
+          reject(response, e)
+        }
       })
       .catch((response) => {
-        response.text()
-          .then((data) => {
-            let json = null
-            try {
-              json = JSON.parse(data)
-            } catch (e) {
-              // test parsing json
-            }
-            response.data = (json !== null ? json : data)
-            return reject(response)
-          })
-          .catch(() => { response.data = null; return reject(response) })
+        try {
+          response.text()
+            .then((data) => {
+              let json = null
+              try {
+                json = JSON.parse(data)
+              } catch (e) {
+                // test parsing json
+              }
+              response.data = (json !== null ? json : data)
+              return reject(response)
+            })
+            .catch(() => { response.data = null; return reject(response) })
+        } catch (e) {
+          reject(response, e)
+        }
       })
   })
 }
