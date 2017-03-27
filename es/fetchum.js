@@ -177,34 +177,42 @@ function _request(isFormData, method, url) {
 
   return new Promise(function (resolve, reject) {
     fetch(reqst).then(function (response) {
-      response.text().then(function (data) {
-        var json = null;
-        try {
-          json = JSON.parse(data);
-        } catch (e) {
-          // test parsing json
-        }
-        response.data = json !== null ? json : data;
-        if (response.ok) {
-          return resolve(response);
-        }
-        reject(response);
-      })['catch'](function () {
-        response.data = null;return reject(response);
-      });
+      try {
+        response.text().then(function (data) {
+          var json = null;
+          try {
+            json = JSON.parse(data);
+          } catch (e) {
+            // test parsing json
+          }
+          response.data = json !== null ? json : data;
+          if (response.ok) {
+            return resolve(response);
+          }
+          reject(response);
+        })['catch'](function () {
+          response.data = null;return reject(response);
+        });
+      } catch (e) {
+        reject(response, e);
+      }
     })['catch'](function (response) {
-      response.text().then(function (data) {
-        var json = null;
-        try {
-          json = JSON.parse(data);
-        } catch (e) {
-          // test parsing json
-        }
-        response.data = json !== null ? json : data;
-        return reject(response);
-      })['catch'](function () {
-        response.data = null;return reject(response);
-      });
+      try {
+        response.text().then(function (data) {
+          var json = null;
+          try {
+            json = JSON.parse(data);
+          } catch (e) {
+            // test parsing json
+          }
+          response.data = json !== null ? json : data;
+          return reject(response);
+        })['catch'](function () {
+          response.data = null;return reject(response);
+        });
+      } catch (e) {
+        reject(response, e);
+      }
     });
   });
 }
