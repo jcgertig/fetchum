@@ -1,24 +1,27 @@
-var webpack = require('webpack');
+let webpack = require('webpack')
 
-var env = process.env.NODE_ENV;
-var config = {
+let env = process.env.NODE_ENV
+let config = {
   module: {
     loaders: [
-      { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ },
-      { test: /\.json$/, loaders: ['json-loader'] },
-    ],
+      { test: /\.js$/, loaders: [ 'babel-loader' ], exclude: /node_modules/ },
+      { test: /\.json$/, loaders: [ 'json-loader' ] }
+    ]
   },
   output: {
     library: 'Fetchum',
-    libraryTarget: 'umd',
+    libraryTarget: 'umd'
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(env),
-    }),
+      'process.env.NODE_ENV': JSON.stringify(env)
+    })
   ],
-};
+  node: {
+    fs: 'empty'
+  }
+}
 
 if (env === 'production') {
   config.plugins.push(
@@ -27,10 +30,10 @@ if (env === 'production') {
         pure_getters: true,
         unsafe: true,
         unsafe_comps: true,
-        warnings: false,
-      },
+        warnings: false
+      }
     })
-  );
+  )
 }
 
-module.exports = config;
+module.exports = config

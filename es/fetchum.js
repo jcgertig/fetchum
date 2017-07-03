@@ -14,6 +14,14 @@ if (!has(Object, 'assign')) {
   Object.assign = assign;
 }
 
+function _config(apiBase) {
+  if (typeof window !== 'undefined') {
+    window.FETCHUM_BASE = apiBase;
+  } else {
+    process.env.FETCHUM_BASE = apiBase;
+  }
+}
+
 /**
  * Return the api url base
  *
@@ -21,13 +29,13 @@ if (!has(Object, 'assign')) {
 function _getBase() {
   var base = '';
   if (typeof process === 'object' && '' + process === '[object process]') {
-    if (!isUndefined(process.env) && !isUndefined(process.env.API_BASE)) {
-      base = process.env.API_BASE;
+    if (!isUndefined(process.env) && (!isUndefined(process.env.FETCHUM_BASE) || !isUndefined(process.env.API_BASE))) {
+      base = process.env.FETCHUM_BASE || process.env.API_BASE;
     }
     return base;
   }
-  if (!isUndefined(window.API_BASE)) {
-    base = window.API_BASE;
+  if (!isUndefined(window.FETCHUM_BASE) || !isUndefined(window.API_BASE)) {
+    base = window.FETCHUM_BASE || window.API_BASE;
   }
   return base;
 }
@@ -372,6 +380,8 @@ export var generateCRUDRequests = function generateCRUDRequests() {
     })
   };
 };
+
+export var config = _config;
 
 export var request = _request;
 
