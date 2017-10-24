@@ -273,30 +273,30 @@ generateCRUDRequests
  * @param  {String} url
  * @param  {JSON} body
  * @param  {Object} headers
- * @param  {String} credentials
+ * @param  {Object} otherConfig
  *
  */
- request
+request
 
 /**
  * Basic http requests
  * @param  {String} url
  * @param  {JSON} body
  * @param  {Object} headers
- * @param  {String} credentials
+ * @param  {Object} otherConfig
  *
  */
-getReq, putReq, postReq, patchReq, deleteReq
+getRequest, putRequest, postRequest, patchRequest, deleteRequest
 
 /**
  * Form requests - the body JSON is converted into FormData
  * @param  {String} url
  * @param  {JSON} body
  * @param  {Object} headers
- * @param  {String} credentials
+ * @param  {Object} otherConfig
  *
  */
-putFormReq, postFormReq
+putFormRequest, postFormRequest
 
 /**
  * Calls the request and prepends route with api base
@@ -305,7 +305,7 @@ putFormReq, postFormReq
  * @param  {String} url
  * @param  {JSON} body
  * @param  {Object} headers
- * @param  {String} credentials
+ * @param  {Object} otherConfig
  *
  */
 apiRequest
@@ -315,20 +315,20 @@ apiRequest
  * @param  {String} url
  * @param  {JSON} body
  * @param  {Object} headers
- * @param  {String} credentials
+ * @param  {Object} otherConfig
  *
  */
-apiGetReq, apiPutReq, apiPostReq, apiPatchReq, apiDeleteReq
+getApiRequest, putApiRequest, postApiRequest, patchApiRequest, deleteApiRequest
 
 /**
  * API Form requests - the body JSON is converted into FormData
  * @param  {String} url
  * @param  {JSON} body
  * @param  {Object} headers
- * @param  {String} credentials
+ * @param  {Object} otherConfig
  *
  */
-apiPutFormReq, apiPostFormReq
+putApiFormRequest, postApiFormRequest
 
 ```
 

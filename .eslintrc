@@ -1,15 +1,19 @@
 {
-  "extends": "eslint-config-rackt",
   "env": {
+    "browser": true,
     "node": true
   },
-  "globals": {
-    "expect": true
-  },
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "plugins": [
+    "babel"
+  ],
   "rules": {
-    "no-console": 0,
-    "padded-blocks": 0,
-    "no-use-before-define": [2, "nofunc"],
-    "no-unused-expressions": 0
+    "no-underscore-dangle": 0,
+    "generator-star-spacing": 1,
+    "babel/new-cap": 1,
+    "object-shorthand": 1,
+    "arrow-parens": 1,
+    "no-await-in-loop": 1
   }
 }
