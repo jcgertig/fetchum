@@ -7,7 +7,9 @@
 [![Dev Dependencies][dev-deps]][package-url]
 [![License][license]][package-url]
 
-__A better fetch api and LocalStorage Wrapper__
+__A better fetch api__
+
+> The main bulk of the local storage wrapper has been moved out into [betterstorage](https://github.com/jcgertig/betterstorage). The token related methods still exist.
 
 ## Install
 
