@@ -204,15 +204,15 @@ methods.apiRequest = apiRequest;
 methods.generateRequest = generateRequest;
 methods.generateCRUDRequests = generateCRUDRequests;
 
-const buildReqs = (mid = '', form = false) => {
+const buildReqs = (reqMethod, mid = '', form = false) => {
   ['get', 'put', 'post', 'patch', 'delete'].forEach((method) => {
-    methods[`${method}${mid}Request`] = request.bind(null, form, method);
+    methods[`${method}${mid}Request`] = reqMethod.bind(null, form, method);
   });
 };
 
-buildReqs();
-buildReqs('Form', true);
-buildReqs('Api');
-buildReqs('ApiForm', true);
+buildReqs(request);
+buildReqs(request, 'Form', true);
+buildReqs(apiRequest, 'Api');
+buildReqs(apiRequest, 'ApiForm', true);
 
 export default methods;
