@@ -1,11 +1,17 @@
 import { isUndefined } from 'lodash';
 import BetterStorage from 'betterstorage';
-import { LocalStorage } from 'node-localstorage';
 
 const PRE_VAR = 'STORAGE_PREFIX';
 function getStore() {
   if (typeof process === 'object' && `${process}` === '[object process]') {
-    return LocalStorage;
+    return {
+      setItem: () => {},
+      getItem: () => {},
+      removeItem: () => {},
+      key: () => {},
+      clear: () => {},
+      length: 0,
+    };
   }
   return 'local';
 }

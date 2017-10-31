@@ -240,10 +240,10 @@ export default {
 
 
 ```javascript
-import fetchum from 'fetchum';
+import { apiRequests } from 'fetchum';
 
 const getUsersDirect = () => {
-  fetchum.apiGet('/v1/users')
+  apiRequests.get('/v1/users')
     .then((res) => { console.log('my users', res.data); })
     .catch((res, err) => { console.warn(res); });
 };
@@ -288,7 +288,7 @@ request
  * @param  {Object} otherConfig
  *
  */
-getRequest, putRequest, postRequest, patchRequest, deleteRequest
+requests.get, requests.put, requests.post, requests.patch, requests.delete
 
 /**
  * Form requests - the body JSON is converted into FormData
@@ -298,7 +298,7 @@ getRequest, putRequest, postRequest, patchRequest, deleteRequest
  * @param  {Object} otherConfig
  *
  */
-putFormRequest, postFormRequest
+requests.putForm, requests.postForm
 
 /**
  * Calls the request and prepends route with api base
@@ -320,7 +320,7 @@ apiRequest
  * @param  {Object} otherConfig
  *
  */
-getApiRequest, putApiRequest, postApiRequest, patchApiRequest, deleteApiRequest
+apiRequests.get, apiRequests.put, apiRequests.post, apiRequests.patch, apiRequests.delete
 
 /**
  * API Form requests - the body JSON is converted into FormData
@@ -330,7 +330,7 @@ getApiRequest, putApiRequest, postApiRequest, patchApiRequest, deleteApiRequest
  * @param  {Object} otherConfig
  *
  */
-putApiFormRequest, postApiFormRequest
+apiRequests.putForm, apiRequests.postForm
 
 ```
 

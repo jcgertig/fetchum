@@ -1,6 +1,6 @@
 {
   "name": "fetchum",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "A better fetch and local storage system",
   "main": "lib/index.js",
   "scripts": {
