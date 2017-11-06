@@ -1,4 +1,4 @@
-import { isArray, isObject, isString, isUndefined, cloneDeep } from 'lodash';
+import { isArray, isObject, isString, isUndefined, cloneDeep, forEach } from 'lodash';
 
 export function parseJson(data) {
   let json = null;
@@ -127,7 +127,7 @@ export function transformUrlParams(params = {}, formatedParams = [], originalKey
  */
 export function parameterizeRoute(route, params) {
   let parameterized = cloneDeep(route);
-  params.forEach((val, key) => {
+  forEach(params, (val, key) => {
     // eslint-disable-next-line
     if (isUndefined(val)) { console.warn(`error: parameter ${key} was ${val}`); }
     parameterized = parameterized.replace(`:${key}`, val);
