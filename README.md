@@ -38,9 +38,9 @@ process.env.FETCHUM_PREFIX = '@my-app';
 For universal set both.
 
 ```javascript
-import { setConfig } from 'fetchum';
+import fetchum from 'fetchum';
 
-setConfig('/api/', '@app-prefix');
+fetchum.setConfig('/api/', '@app-prefix');
 ```
 
 ### Api - `generateRequest`
@@ -66,9 +66,9 @@ __Function Params__
 __Examples__
 
 ```javascript
-import {generateRequest} from 'fetchum';
+import fetchum from 'fetchum';
 
-const getRandomUser = generateRequest({
+const getRandomUser = fetchum.generateRequest({
   method: 'GET',
   external: true,
   route: 'http://uifaces.com/api/v1/random',
@@ -77,16 +77,16 @@ const getRandomUser = generateRequest({
 
 Create and update a user with profile image on a authenticated api
 ```javascript
-import {generateRequest} from 'fetchum';
+import fetchum from 'fetchum';
 
-const postUser = generateRequest({
+const postUser = fetchum.generateRequest({
   method: 'POST',
   form: true,
   token: true,
   route: '/v1/user',
 });
 
-const putUser = generateRequest({
+const putUser = fetchum.generateRequest({
   method: 'PUT',
   form: true,
   token: true,
@@ -119,9 +119,9 @@ __Function Params__
 
 __Examples__
 ```javascript
-import {generateCRUDRequests} from 'fetchum';
+import fetchum from 'fetchum';
 
-const userApi = generateCRUDRequests('/users', 'id', true);
+const userApi = fetchum.generateCRUDRequests('/users', 'id', true);
 
 userApi.fetchOne({ id: 0 })
   .then((res) => {
@@ -165,9 +165,9 @@ const setToken = (token) => {
 
 Login and out example
 ```javascript
-import {LocalStorage, generateRequest} from 'fetchum';
+import fetchum from 'fetchum';
 
-const apiLogin = generateRequest({
+const apiLogin = fetchum.generateRequest({
   method: 'POST',
   route: '/v1/login',
 });
@@ -175,57 +175,57 @@ const apiLogin = generateRequest({
 const login = (data) => {
   apiLogin(data)
     .then((res) => {
-      LocalStorage.setToken(res.data.token);
-      LocalStorage.set('user', res.data.user);
+      fetchum.LocalStorage.setToken(res.data.token);
+      fetchum.LocalStorage.set('user', res.data.user);
     })
     .catch((res) => { console.warn(res); });
 };
 
 const getCurrentUser = () => {
-  return LocalStorage.get('user');
+  return fetchum.LocalStorage.get('user');
 };
 
 const logout = () => {
-  LocalStorage.remove('user');
-  LocalStorage.removeToken();
+  fetchum.LocalStorage.remove('user');
+  fetchum.LocalStorage.removeToken();
 };
 ```
 
 ### Random Usage Examples
 ```javascript
-import {generateRequest} from 'fetchum';
+import fetchum from 'fetchum';
 
 /**
  * API Calls
  *
  */
 export default {
-  login: generateRequest({
+  login: fetchum.generateRequest({
     method: 'POST',
     route: '/v1/login',
   }),
   user: {
-    getAll: generateRequest({
+    getAll: fetchum.generateRequest({
       method: 'GET',
       token: true,
       route: '/v1/users',
     }),
-    show: generateRequest({
+    show: fetchum.generateRequest({
       method: 'GET',
       token: true,
       route: '/v1/users/:id',
     }),
-    update: generateRequest({
+    update: fetchum.generateRequest({
       method: 'PUT',
       token: true,
       route: '/v1/users/:id',
     }),
-    remove: generateRequest({
+    remove: fetchum.generateRequest({
       method: 'DELETE',
       token: true,
       route: '/v1/users/:id',
     }),
-    create: generateRequest({
+    create: fetchum.generateRequest({
       method: 'POST',
       token: true,
       route: '/v1/users',
