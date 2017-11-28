@@ -10,11 +10,15 @@ export function parseJson(data) {
   return json;
 }
 
-export function setConfig(apiBase) {
-  if (typeof window !== 'undefined') {
-    window.FETCHUM_BASE = apiBase;
-  } else {
+export function setConfig(apiBase, storagePrefix, storageType) {
+  if (!isUndefined(process || undefined) && !isUndefined(process.env)) {
     process.env.FETCHUM_BASE = apiBase;
+    process.env.FETCHUM_PREFIX = storagePrefix;
+    process.env.FETCHUM_STORE_TYPE = storageType;
+  } else if (!isUndefined(window || undefined)) {
+    window.FETCHUM_BASE = apiBase;
+    window.FETCHUM_PREFIX = storagePrefix;
+    window.FETCHUM_STORE_TYPE = storageType;
   }
 }
 

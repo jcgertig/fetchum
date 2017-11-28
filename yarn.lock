@@ -933,12 +933,11 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-betterstorage@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/betterstorage/-/betterstorage-1.0.0.tgz#c34ada080cff5c328de2872759d00e3ab5c7cf17"
+betterstorage@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/betterstorage/-/betterstorage-1.1.0.tgz#4930f710efd51a393f974b7a70b34fee5d97cf95"
   dependencies:
     core-decorators "^0.20.0"
-    memoizerific "^1.11.2"
 
 binary-extensions@^1.0.0:
   version "1.8.0"
@@ -1504,6 +1503,10 @@ es-to-primitive@^1.1.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.1"
 
+es6-promise@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.1.1.tgz#8811e90915d9a0dba36274f0b242dbda78f9c92a"
+
 escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
@@ -1776,6 +1779,13 @@ fbjs@^0.8.16:
     promise "^7.1.1"
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
+
+fetch-everywhere@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/fetch-everywhere/-/fetch-everywhere-1.0.5.tgz#b2497f47a57d9026b3907c09756acf5f4bd34e8b"
+  dependencies:
+    node-fetch "^1.0.1"
+    whatwg-fetch ">=0.10.0"
 
 figures@^2.0.0:
   version "2.0.0"

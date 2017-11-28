@@ -23,27 +23,24 @@ yarn add fetchum
 
 ```javascript
 <script>
-  window.API_BASE = 'localhost:3000/api';
-  window.STORAGE_PREFIX = '@my-app';
+  window.FETCHUM_BASE = 'localhost:3000/api';
+  window.FETCHUM_PREFIX = '@my-app';
 </script>
 ```
 
 For use Node side set `env` vars ie:
 
 ```javascript
-process.env.API_BASE = 'localhost:3000/api';
-process.env.STORAGE_PREFIX = '@my-app';
+process.env.FETCHUM_BASE = 'localhost:3000/api';
+process.env.FETCHUM_PREFIX = '@my-app';
 ```
 
 For universal set both.
 
-In this example webpack var replace for env vars is used.
-
 ```javascript
-if (typeof window === 'undefined') {
-  window.API_BASE = process.env.API_BASE || '/api/';
-  window.STORAGE_PREFIX = process.env.STORAGE_PREFIX || '@app-prefix';
-}
+import { setConfig } from 'fetchum';
+
+setConfig('/api/', '@app-prefix');
 ```
 
 ### Api - `generateRequest`

@@ -1,8 +1,11 @@
-/* global FormData, fetch, Headers, Request, window, File, Blob, self */
-import 'isomorphic-fetch';
+/* global FormData, fetch, Headers, Request, window, File, Blob */
+import es6Promise from 'es6-promise';
+import 'fetch-everywhere';
 import { cloneDeep, toLower } from 'lodash';
 import * as Storage from './storage';
 import { parseJson, getBase, transformBody, transformUrlParams, parameterizeRoute } from './utils';
+
+es6Promise.polyfill();
 
 /**
  * Fetchum - Better Fetch
@@ -133,7 +136,7 @@ function requestWithToken(options, params, body = {}, headers = {}, customToken 
   const cloned = cloneDeep(options);
   if (params) { cloned.route = parameterizeRoute(cloned.route, params); }
   const requestHeaders = Object.assign({}, headers, {
-    Authorization: `${tokenType} ${customToken !== null ? customToken : Storage.getToken()}`,
+    Authorization: `${tokenType} ${customToken !== null ? customToken : Storage.getToken(options.storageOveride)}`,
   });
   return callRequest(cloned, body, requestHeaders);
 }
@@ -164,32 +167,37 @@ export const generateRequest = (options) => {
  * @param  {Object} useToken
  *
  */
-export const generateCRUDRequests = (baseUrl = '', idVar = 'id', token = false) => (
+export const generateCRUDRequests = (baseUrl = '', idVar = 'id', token = false, storageOveride) => (
   {
     fetchAll: generateRequest({
       token,
       method: 'GET',
       route: baseUrl,
+      storageOveride,
     }),
     create: generateRequest({
       token,
       method: 'POST',
       route: baseUrl,
+      storageOveride,
     }),
     fetchOne: generateRequest({
       token,
       method: 'GET',
       route: `${baseUrl}/:${idVar}`,
+      storageOveride,
     }),
     update: generateRequest({
       token,
       method: 'PUT',
       route: `${baseUrl}/:${idVar}`,
+      storageOveride,
     }),
     delete: generateRequest({
       token,
       method: 'DELETE',
       route: `${baseUrl}/:${idVar}`,
+      storageOveride,
     }),
   }
 );

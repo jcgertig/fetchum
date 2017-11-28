@@ -31,6 +31,9 @@ lib/
 # UMD distribution
 dist/
 
+# storage dir
+fetchum-storage/
+
 # Miscellaneous
 *~
 *#

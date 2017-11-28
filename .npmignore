@@ -22,6 +22,7 @@
 *.gz
 *.orig
 
+fetchum-storage
 work
 src
 examples
@@ -45,6 +46,7 @@ rollup.config.js
 .iml
 *.sublime-workspace
 *.sublime-project
+*.test.js
 
 ehthumbs.db
 Icon?
