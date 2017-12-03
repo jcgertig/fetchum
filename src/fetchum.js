@@ -1,7 +1,7 @@
 /* global FormData, fetch, Headers, Request, window, File, Blob */
 import es6Promise from 'es6-promise';
 import 'fetch-everywhere';
-import { cloneDeep, toLower } from 'lodash';
+import { cloneDeep, toLower, forEach } from 'lodash';
 import * as Storage from './storage';
 import { parseJson, getBase, transformBody, transformUrlParams, parameterizeRoute } from './utils';
 
@@ -31,21 +31,20 @@ export function request(isFormData, method, url, body = {}, headers = {}, others
 
   let newUrl = cloneDeep(url);
 
-  const fetchData = {
-    method: toLower(method),
-    headers: new Headers(Object.assign({}, defaultHeaders, headers)),
-  };
-
-  if (toLower(method) !== 'get') {
-    fetchData.body = transformBody(body, isFormData);
-  } else {
-    const params = transformUrlParams(body);
-    if (params.length > 0) {
-      newUrl += `?${params.join('&')}`;
-    }
+  function getHeaders(done) {
+    const promises = [];
+    forEach(headers, (value, key) => {
+      if (typeof value !== 'function') {
+        promises.push(new Promise(accept => accept({ key, value })));
+      } else {
+        promises.push(new Promise(accept => value(res => accept({ key, value: res }))));
+      }
+    });
+    Promise.all(promises).then(res => done(res.reduce((data, header) => ({
+      ...data,
+      [header.key]: header.value,
+    }), {})));
   }
-
-  const reqst = new Request(newUrl, Object.assign({}, others, fetchData));
 
   const handleRes = (resolve, reject) => (response) => {
     const res = cloneDeep(response);
@@ -70,9 +69,26 @@ export function request(isFormData, method, url, body = {}, headers = {}, others
   };
 
   return new Promise((resolve, reject) => {
-    fetch(reqst)
-      .then(handleRes(resolve, reject))
-      .catch(handleRes(resolve, reject));
+    getHeaders((otherHeaders) => {
+      const fetchData = {
+        method: toLower(method),
+        headers: new Headers(Object.assign({}, defaultHeaders, otherHeaders)),
+      };
+
+      if (toLower(method) !== 'get') {
+        fetchData.body = transformBody(body, isFormData);
+      } else {
+        const params = transformUrlParams(body);
+        if (params.length > 0) {
+          newUrl += `?${params.join('&')}`;
+        }
+      }
+
+      const reqst = new Request(newUrl, Object.assign({}, others, fetchData));
+      fetch(reqst)
+        .then(handleRes(resolve, reject))
+        .catch(handleRes(resolve, reject));
+    });
   });
 }
 
@@ -136,7 +152,15 @@ function requestWithToken(options, params, body = {}, headers = {}, customToken 
   const cloned = cloneDeep(options);
   if (params) { cloned.route = parameterizeRoute(cloned.route, params); }
   const requestHeaders = Object.assign({}, headers, {
-    Authorization: `${tokenType} ${customToken !== null ? customToken : Storage.getToken(options.storageOveride)}`,
+    Authorization: (done) => {
+      if (customToken !== null) {
+        done(`${tokenType} ${customToken}`);
+      } else {
+        Storage.getToken(options.storageOveride).then((storedToken) => {
+          done(`${tokenType} ${storedToken}`);
+        });
+      }
+    },
   });
   return callRequest(cloned, body, requestHeaders);
 }

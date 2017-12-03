@@ -64,7 +64,11 @@ export class Storage {
    *
    */
   getToken(storeOveride) {
-    return (this.store(storeOveride).get('token').token);
+    return new Promise((accept, reject) => (
+      this.store(storeOveride).get('token')
+      .then(({ token }) => accept(token))
+      .catch(reject)
+    ));
   }
 
   /**
