@@ -184,6 +184,41 @@ export const generateRequest = (options) => {
   );
 };
 
+export const buildCRUDRequests = (baseUrl = '', idVar = 'id', token = false, storageOveride, generator) => (
+  {
+    fetchAll: generator({
+      token,
+      method: 'GET',
+      route: baseUrl,
+      storageOveride,
+    }),
+    create: generator({
+      token,
+      method: 'POST',
+      route: baseUrl,
+      storageOveride,
+    }),
+    fetchOne: generator({
+      token,
+      method: 'GET',
+      route: `${baseUrl}/:${idVar}`,
+      storageOveride,
+    }),
+    update: generator({
+      token,
+      method: 'PUT',
+      route: `${baseUrl}/:${idVar}`,
+      storageOveride,
+    }),
+    delete: generator({
+      token,
+      method: 'DELETE',
+      route: `${baseUrl}/:${idVar}`,
+      storageOveride,
+    }),
+  }
+);
+
 /**
  * Generate a crud api requests
  * @param  {Object} baseUrl
@@ -192,38 +227,7 @@ export const generateRequest = (options) => {
  *
  */
 export const generateCRUDRequests = (baseUrl = '', idVar = 'id', token = false, storageOveride) => (
-  {
-    fetchAll: generateRequest({
-      token,
-      method: 'GET',
-      route: baseUrl,
-      storageOveride,
-    }),
-    create: generateRequest({
-      token,
-      method: 'POST',
-      route: baseUrl,
-      storageOveride,
-    }),
-    fetchOne: generateRequest({
-      token,
-      method: 'GET',
-      route: `${baseUrl}/:${idVar}`,
-      storageOveride,
-    }),
-    update: generateRequest({
-      token,
-      method: 'PUT',
-      route: `${baseUrl}/:${idVar}`,
-      storageOveride,
-    }),
-    delete: generateRequest({
-      token,
-      method: 'DELETE',
-      route: `${baseUrl}/:${idVar}`,
-      storageOveride,
-    }),
-  }
+  buildCRUDRequests(baseUrl, idVar, token, storageOveride, generateRequest)
 );
 
 const buildReqs = reqMethod => ['get', 'put', 'post', 'patch', 'delete', 'postForm', 'putForm'].reduce(
