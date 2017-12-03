@@ -45,16 +45,7 @@ ajv@^4.9.1:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
 
-ajv@^5.2.3:
-  version "5.2.4"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.2.4.tgz#3daf9a8b67221299fdae8d82d117ed8e6c80244b"
-  dependencies:
-    co "^4.6.0"
-    fast-deep-equal "^1.0.0"
-    json-schema-traverse "^0.3.0"
-    json-stable-stringify "^1.0.1"
-
-ajv@^5.3.0:
+ajv@^5.2.3, ajv@^5.3.0:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.1.tgz#b38bb8876d9e86bee994956a04e721e88b248eb2"
   dependencies:
@@ -942,9 +933,9 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-betterstorage@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/betterstorage/-/betterstorage-2.0.0.tgz#7e03a52c3b9b8a6d3075b38b26a222369e8fe367"
+betterstorage@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/betterstorage/-/betterstorage-2.0.1.tgz#beef67df6e3fcc2f593cecc92a1f643f27ac52df"
   dependencies:
     core-decorators "^0.20.0"
 
@@ -1429,14 +1420,7 @@ doctrine@1.5.0:
     esutils "^2.0.2"
     isarray "^1.0.0"
 
-doctrine@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-2.0.0.tgz#c73d8d2909d22291e1a007a395804da8b665fe63"
-  dependencies:
-    esutils "^2.0.2"
-    isarray "^1.0.0"
-
-doctrine@^2.0.2:
+doctrine@^2.0.0, doctrine@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-2.0.2.tgz#68f96ce8efc56cc42651f1faadb4f175273b0075"
   dependencies:
