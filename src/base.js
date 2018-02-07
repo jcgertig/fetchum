@@ -45,13 +45,15 @@ export default class Fetchum {
 
   generateRequest(options) {
     return base.generateRequest(assign(
-      { storageOveride: this.LocalStorage },
+      { storageOveride: this.LocalStorage.store() },
       options,
       this.getOther(options),
     ));
   }
 
   generateCRUDRequests(baseUrl, idVar, token) {
-    return base.buildCRUDRequests(baseUrl, idVar, token, this.LocalStorage, this.generateRequest);
+    return base.buildCRUDRequests(
+      baseUrl, idVar, token, this.LocalStorage.store(), this.generateRequest,
+    );
   }
 }

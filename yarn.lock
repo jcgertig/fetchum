@@ -933,9 +933,9 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-betterstorage@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/betterstorage/-/betterstorage-2.0.1.tgz#beef67df6e3fcc2f593cecc92a1f643f27ac52df"
+betterstorage@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/betterstorage/-/betterstorage-2.0.3.tgz#5a675c227b9ff8304b87dc7e8be72927e7a71412"
   dependencies:
     core-decorators "^0.20.0"
 

@@ -2,7 +2,7 @@
 import es6Promise from 'es6-promise';
 import 'fetch-everywhere';
 import { cloneDeep, toLower, forEach } from 'lodash';
-import * as Storage from './storage';
+import Storage from './storage'; // eslint-disable-line
 import { parseJson, getBase, transformBody, transformUrlParams, parameterizeRoute } from './utils';
 
 es6Promise.polyfill();
