@@ -47,7 +47,7 @@ export function request(isFormData, method, url, body = {}, headers = {}, others
   }
 
   const handleRes = (resolve, reject) => (response) => {
-    const res = cloneDeep(response);
+    const res = response.clone();
     try {
       response.text()
         .then((data) => {
@@ -59,9 +59,9 @@ export function request(isFormData, method, url, body = {}, headers = {}, others
             reject(res);
           }
         })
-        .catch(() => {
+        .catch((e) => {
           res.data = null;
-          reject(res);
+          reject(res, e);
         });
     } catch (e) {
       reject(response, e);

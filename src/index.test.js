@@ -3,7 +3,7 @@
 import BetterStorage from 'betterstorage';
 import fetchum from './index';
 
-test('test store override getToken', () => {
+test('test store override getToken', (done) => {
   const store = new BetterStorage('@test', {
     setItem: () => {},
     getItem: () => ({ token: 'test-return' }),
@@ -12,5 +12,8 @@ test('test store override getToken', () => {
     clear: () => {},
     length: 0,
   });
-  expect(fetchum.LocalStorage.getToken(store)).toBe('test-return');
+  fetchum.LocalStorage.getToken(store).then(token => {
+    expect(token).toBe('test-return');
+    done();
+  });
 });
